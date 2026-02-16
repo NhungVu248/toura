@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\ActivationController;
+use App\Http\Controllers\Auth\SocialAuthController;
+
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -23,6 +25,11 @@ Route::post('/email/verification-notification', function (Request $request) {
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/auth/google', [SocialAuthController::class, 'redirect'])
+    ->name('google.redirect');
+Route::get('/auth/google/callback', [SocialAuthController::class, 'callback'])
+    ->name('google.callback');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
