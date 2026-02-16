@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Client;
+use App\Notifications\VerifyAccountNotification;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-
+use Carbon\Carbon;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -45,4 +46,18 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+    public function sendEmailVerificationNotification()
+        {
+            $this->notify(new VerifyAccountNotification());
+        }
+    public function activationTokenValid($minutes = 60)
+{
+    if (!$this->activation_token_created_at) {
+        return false;
+    }
+
+    $createdAt = \Carbon\Carbon::parse($this->activation_token_created_at);
+
+    return $createdAt->gt(now()->subMinutes($minutes));
+}
 }
