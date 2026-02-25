@@ -41,29 +41,24 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
-Route::prefix('admin')
-    ->middleware(['auth', 'admin'])
-    ->group(function () {
-
-        Route::get('/dashboard', [AdminDashboardController::class, 'index'])
-            ->name('admin.dashboard');
-
-        Route::get('/booking-detail/{id}', function ($id) {
-            // sau này bạn làm controller riêng
-        })->name('admin.booking-detail');
-
-    });
 
 Route::prefix('admin')->group(function () {
 
-    // Login
+    // Nếu chưa login → vào login
     Route::get('/login', [AdminLoginController::class, 'showLoginForm'])
         ->name('admin.login');
 
     Route::post('/login', [AdminLoginController::class, 'login'])
         ->name('admin.login.submit');
 
-    // Dashboard
+    // Nếu chưa có tài khoản → đăng ký
+    Route::get('/register', [AdminLoginController::class, 'showRegisterForm'])
+        ->name('admin.register');
+
+    Route::post('/register', [AdminLoginController::class, 'register'])
+        ->name('admin.register.submit');
+
+    // Chỉ admin đã login mới vào được
     Route::middleware('auth:admin')->group(function () {
 
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])
