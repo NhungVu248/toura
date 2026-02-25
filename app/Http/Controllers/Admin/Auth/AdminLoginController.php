@@ -52,6 +52,11 @@ class AdminLoginController extends Controller
     // Hiển thị form đăng ký
     public function showRegisterForm()
     {
+        // Nếu đã login thì không cho vào register
+        if (Auth::guard('admin')->check()) {
+            return redirect()->route('admin.dashboard');
+        }
+
         return view('admin.auth.register');
     }
 
@@ -73,7 +78,8 @@ class AdminLoginController extends Controller
     // TỰ ĐỘNG LOGIN
     \Illuminate\Support\Facades\Auth::guard('admin')->login($admin);
 
-    return redirect()->route('admin.dashboard');
+    return redirect()->route('admin.dashboard')
+            ->with('success', 'Đăng ký thành công!');
 }
 
 

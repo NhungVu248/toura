@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\ActivationController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\Auth\AdminLoginController;
+use App\Http\Controllers\Admin\UserManagementController;
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -58,7 +59,6 @@ Route::prefix('admin')->group(function () {
     Route::post('/register', [AdminLoginController::class, 'register'])
         ->name('admin.register.submit');
 
-    // Chỉ admin đã login mới vào được
     Route::middleware('auth:admin')->group(function () {
 
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])
@@ -66,6 +66,32 @@ Route::prefix('admin')->group(function () {
 
         Route::post('/logout', [AdminLoginController::class, 'logout'])
             ->name('admin.logout');
+        // User management
+        Route::get('/users', [\App\Http\Controllers\Admin\UserManagementController::class, 'index'])->name('admin.users.index');
+        Route::get('/users/{id}/edit', [\App\Http\Controllers\Admin\UserManagementController::class, 'edit'])->name('admin.users.edit');
+        Route::put('/users/{id}', [\App\Http\Controllers\Admin\UserManagementController::class, 'update'])->name('admin.users.update');
+        Route::delete('/users/{id}', [\App\Http\Controllers\Admin\UserManagementController::class, 'destroy'])->name('admin.users.destroy');
+        Route::get('/users/{id}', 
+            [UserManagementController::class, 'show']
+        )->name('admin.users.show');
+        // Tours
+        Route::get('/tours', function () {
+            return "Tours page (chưa làm)";
+        })->name('admin.tours');
+
+        Route::get('/page-add-tours', function () {
+            return "Add tours page (chưa làm)";
+        })->name('admin.page-add-tours');
+
+        // Booking
+        Route::get('/booking', function () {
+            return "Booking page (chưa làm)";
+        })->name('admin.booking');
+
+        // Contact
+        Route::get('/contact', function () {
+            return "Contact page (chưa làm)";
+        })->name('admin.contact');
     });
 });
 require __DIR__.'/auth.php';
