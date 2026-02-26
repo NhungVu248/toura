@@ -9,6 +9,8 @@ use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\Auth\AdminLoginController;
 use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\TourController as AdminTourController;
+use App\Http\Controllers\TourController;
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -36,7 +38,8 @@ Route::get('/auth/google/callback', [SocialAuthController::class, 'callback'])
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
-
+Route::get('/tours', [TourController::class, 'index'])->name('tours.index');
+Route::get('/tours/{tour}', [TourController::class, 'show'])->name('tours.show');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -75,10 +78,7 @@ Route::prefix('admin')->group(function () {
             [UserManagementController::class, 'show']
         )->name('admin.users.show');
         // Tours
-        Route::get('/tours', function () {
-            return "Tours page (chưa làm)";
-        })->name('admin.tours');
-
+        Route::resource('tours', AdminTourController::class)->names('admin.tours');
         Route::get('/page-add-tours', function () {
             return "Add tours page (chưa làm)";
         })->name('admin.page-add-tours');

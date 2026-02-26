@@ -71,7 +71,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('admin.tours') ?? '#' }}"
+                    <a href="{{ route('admin.tours.index') }}"
                        class="nav-link">
                         <i class="fa fa-plane me-2"></i> Tours
                     </a>
