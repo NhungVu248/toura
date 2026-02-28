@@ -70,11 +70,29 @@
                       required>{{ old('description') }}</textarea>
         </div>
 
+        {{-- Thumbnail chính --}}
         <div class="mt-6">
-            <label class="block font-medium mb-1">Thumbnail</label>
+            <label class="block font-medium mb-1">Thumbnail (Ảnh đại diện)</label>
             <input type="file" name="thumbnail"
                    class="w-full border rounded px-3 py-2"
                    accept="image/*">
+        </div>
+
+        {{-- Multiple Images --}}
+        <div class="mt-6">
+            <label class="block font-medium mb-1">Gallery Images (Có thể chọn nhiều ảnh)</label>
+            <input type="file" name="images[]"
+                   multiple
+                   class="w-full border rounded px-3 py-2"
+                   accept="image/*">
+
+            <p class="text-sm text-gray-500 mt-1">
+                Ảnh đầu tiên sẽ được đặt làm ảnh chính trong gallery.
+            </p>
+
+            @error('images.*')
+                <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+            @enderror
         </div>
 
         <div class="grid grid-cols-2 gap-6 mt-6">

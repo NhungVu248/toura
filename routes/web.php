@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\Auth\AdminLoginController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\TourController as AdminTourController;
 use App\Http\Controllers\TourController;
+use App\Http\Controllers\ReviewController;
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -79,10 +80,10 @@ Route::prefix('admin')->group(function () {
         )->name('admin.users.show');
         // Tours
         Route::resource('tours', AdminTourController::class)->names('admin.tours');
-        Route::get('/page-add-tours', function () {
-            return "Add tours page (chưa làm)";
-        })->name('admin.page-add-tours');
-
+        Route::get('/tours/{tour}', [TourController::class,'show'])->name('tours.show');
+        Route::post('/tours/{tour}/reviews', 
+        [ReviewController::class, 'store']
+         )->middleware('auth')->name('tours.reviews.store');
         // Booking
         Route::get('/booking', function () {
             return "Booking page (chưa làm)";

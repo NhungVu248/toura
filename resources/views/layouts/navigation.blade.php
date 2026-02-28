@@ -16,12 +16,21 @@
             <div class="hidden md:flex space-x-8 font-medium text-white">
 
                 <a href="/"
-                   class="px-4 py-2 bg-white text-pink-600 rounded-full font-semibold">
+                class="px-4 py-2 rounded-full font-semibold
+                {{ request()->is('/') 
+                        ? 'bg-white text-pink-600' 
+                        : 'hover:text-black transition text-white' }}">
                     Trang Chủ
                 </a>
 
                 <a href="#" class="hover:text-black transition">Giới Thiệu</a>
-                <a href="#" class="hover:text-black transition">Tours</a>
+                <a href="{{ route('tours.index') }}"
+                    class="px-4 py-2 rounded-full font-semibold
+                    {{ request()->routeIs('tours.*') 
+                            ? 'bg-white text-pink-600' 
+                            : 'hover:text-black transition text-white' }}">
+                        Tours
+                    </a>
                 <a href="#" class="hover:text-black transition">Điểm Đến</a>
                 <a href="#" class="hover:text-black transition">Liên Hệ</a>
             </div>
@@ -95,7 +104,7 @@
 
         <a href="/" class="block">Trang Chủ</a>
         <a href="#" class="block">Giới Thiệu</a>
-        <a href="#" class="block">Tours</a>
+        <a href="{{ route('tours.index') }}" class="block">Tours</a>
         <a href="#" class="block">Điểm Đến</a>
         <a href="#" class="block">Liên Hệ</a>
 

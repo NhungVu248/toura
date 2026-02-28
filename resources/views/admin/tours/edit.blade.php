@@ -131,8 +131,9 @@
                         </div>
                     </div>
 
+                    {{-- Thumbnail chính --}}
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Ảnh mới (nếu muốn thay)</label>
+                        <label class="form-label">Ảnh mới (Thumbnail)</label>
                         <input type="file"
                                name="thumbnail"
                                class="form-control"
@@ -140,7 +141,7 @@
                     </div>
 
                     <div class="col-md-6 mb-3">
-                        <label class="form-label">Ảnh hiện tại</label>
+                        <label class="form-label">Thumbnail hiện tại</label>
                         <div>
                             @if($tour->thumbnail)
                                 <img src="{{ asset('storage/' . $tour->thumbnail) }}"
@@ -151,6 +152,37 @@
                             @endif
                         </div>
                     </div>
+
+                    {{-- Upload nhiều ảnh --}}
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Ảnh phụ (có thể chọn nhiều)</label>
+                        <input type="file"
+                               name="images[]"
+                               class="form-control"
+                               multiple
+                               accept="image/*">
+                    </div>
+
+                    {{-- Gallery hiện tại --}}
+                    @if($tour->images && $tour->images->count())
+                        <div class="col-12 mb-3">
+                            <label class="form-label">Ảnh phụ hiện tại</label>
+                            <div class="row">
+                                @foreach($tour->images as $img)
+                                    <div class="col-md-2 mb-3 text-center">
+                                        <img src="{{ asset('storage/' . $img->path) }}"
+                                             class="img-fluid rounded border"
+                                             style="height:100px; object-fit:cover;">
+                                        @if($img->is_primary)
+                                            <small class="text-success d-block mt-1">
+                                                Ảnh chính
+                                            </small>
+                                        @endif
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
 
                 </div>
 
