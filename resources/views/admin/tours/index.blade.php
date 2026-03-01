@@ -91,18 +91,19 @@
                                         <i class="fa fa-edit"></i>
                                     </a>
 
-                                    <form action="{{ route('admin.tours.destroy', $tour->id) }}"
-                                          method="POST"
-                                          class="d-inline">
-                                        @csrf
-                                        @method('DELETE')
+                                    <form action="{{ route('admin.tours.destroy', $tour) }}"
+                                    method="POST"
+                                    style="display:inline;">
 
-                                        <button onclick="return confirm('Bạn chắc chứ?')"
-                                                type="submit"
-                                                class="btn btn-sm btn-danger">
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    </form>
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit"
+                                            onclick="return confirm('Bạn chắc chắn muốn xóa?')"
+                                            class="btn btn-sm btn-danger">
+                                        Delete
+                                    </button>
+                                </form>
                                 </td>
 
                             </tr>

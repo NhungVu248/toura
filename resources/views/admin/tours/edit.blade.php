@@ -185,7 +185,65 @@
                     @endif
 
                 </div>
+                <hr class="my-4">
 
+                <h5 class="mb-3">Lịch khởi hành</h5>
+
+                <div id="schedule-container">
+
+                    @foreach($tour->schedules as $index => $schedule)
+                        <div class="row mb-3 border p-3 rounded">
+
+                            <input type="hidden"
+                                name="schedules[{{ $index }}][id]"
+                                value="{{ $schedule->id }}">
+
+                            <div class="col-md-3">
+                                <label>Ngày</label>
+                                <input type="date"
+                                    name="schedules[{{ $index }}][departure_date]"
+                                    value="{{ $schedule->departure_date }}"
+                                    class="form-control">
+                            </div>
+
+                            <div class="col-md-2">
+                                <label>Giờ</label>
+                                <input type="time"
+                                    name="schedules[{{ $index }}][departure_time]"
+                                    value="{{ $schedule->departure_time }}"
+                                    class="form-control">
+                            </div>
+
+                            <div class="col-md-2">
+                                <label>Tổng chỗ</label>
+                                <input type="number"
+                                    name="schedules[{{ $index }}][seats_total]"
+                                    value="{{ $schedule->seats_total }}"
+                                    class="form-control">
+                            </div>
+
+                            <div class="col-md-2">
+                                <label>Giá riêng</label>
+                                <input type="text"
+                                    name="schedules[{{ $index }}][price_override]"
+                                    value="{{ $schedule->price_override }}"
+                                    class="form-control">
+                            </div>
+
+                            <div class="col-md-2">
+                                <label>Trạng thái</label>
+                                <select name="schedules[{{ $index }}][status]"
+                                        class="form-select">
+                                    <option value="open" {{ $schedule->status=='open'?'selected':'' }}>Open</option>
+                                    <option value="sold_out" {{ $schedule->status=='sold_out'?'selected':'' }}>Sold Out</option>
+                                    <option value="cancelled" {{ $schedule->status=='cancelled'?'selected':'' }}>Cancelled</option>
+                                </select>
+                            </div>
+
+                        </div>
+                    @endforeach
+
+                </div>
                 <button type="submit" class="btn btn-success">
                     <i class="fa fa-save me-2"></i> Cập nhật Tour
                 </button>

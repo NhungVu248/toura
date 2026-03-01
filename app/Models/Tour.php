@@ -44,10 +44,10 @@ class Tour extends Model
     ];
 
     // Nếu bạn muốn binding route theo slug, bỏ comment hàm dưới
-    public function getRouteKeyName()
-    {
-        return 'slug';
-    }
+    //public function getRouteKeyName()
+    //{
+     //   return 'slug';
+    //}
 
     /*
     |--------------------------------------------------------------------------

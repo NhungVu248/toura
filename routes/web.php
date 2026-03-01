@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull;
 use App\Http\Controllers\Auth\ActivationController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
@@ -40,7 +41,11 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
 Route::get('/tours', [TourController::class, 'index'])->name('tours.index');
-Route::get('/tours/{tour}', [TourController::class, 'show'])->name('tours.show');
+Route::get('/tours/{tour:slug}', [TourController::class, 'show'])
+    ->name('tours.show');
+Route::post('/tours/{tour}/reviews', 
+        [ReviewController::class, 'store']
+         )->middleware('auth')->name('tours.reviews.store');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -79,12 +84,13 @@ Route::prefix('admin')->group(function () {
             [UserManagementController::class, 'show']
         )->name('admin.users.show');
         // Tours
-        Route::resource('tours', AdminTourController::class)->names('admin.tours');
-        Route::get('/tours/{tour}', [TourController::class,'show'])->name('tours.show');
-        Route::post('/tours/{tour}/reviews', 
-        [ReviewController::class, 'store']
-         )->middleware('auth')->name('tours.reviews.store');
-        // Booking
+        Route::resource('tours', AdminTourController::class)
+        ->parameters(['tours' => 'tour'])
+        ->scoped([
+            'tour' => 'id'
+        ])
+        ->names('admin.tours');
+        
         Route::get('/booking', function () {
             return "Booking page (chưa làm)";
         })->name('admin.booking');

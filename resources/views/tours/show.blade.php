@@ -252,47 +252,28 @@
 
                     @if($tour->upcomingSchedules->count())
 
-                        <form action="{{ route('booking.store') }}" method="POST">
-                            @csrf
+    <div class="border p-4 rounded bg-gray-50 mt-4">
+        <p class="font-semibold text-lg mb-2">
+            {{ number_format($tour->price_adult, 0, ',', '.') }} VND / người lớn
+        </p>
 
-                            {{-- Chọn ngày khởi hành --}}
-                            <label class="block mb-1 font-medium">Ngày khởi hành</label>
+        <div class="text-gray-600">
+            Chức năng đặt tour sẽ được cập nhật sớm.
+        </div>
 
-                            <select name="schedule_id"
-                                    class="w-full mb-3 border rounded px-2 py-2"
-                                    required>
-                                <option value="">-- Chọn ngày đi --</option>
+        <button disabled
+                class="w-full mt-4 bg-gray-400 text-white py-2 rounded cursor-not-allowed">
+            Đặt ngay (Sắp ra mắt)
+        </button>
+    </div>
 
-                                @foreach($tour->upcomingSchedules as $schedule)
-                                    <option value="{{ $schedule->id }}">
-                                        {{ $schedule->departure_date->format('d/m/Y') }}
-                                        (Còn {{ $schedule->seats_available }} chỗ)
-                                    </option>
-                                @endforeach
-                            </select>
+@else
 
-                            {{-- Số lượng --}}
-                            <label class="block mb-1 font-medium">Số lượng</label>
-                            <input type="number"
-                                name="quantity"
-                                min="1"
-                                value="1"
-                                class="w-full mb-3 border rounded px-2 py-2"
-                                required>
+    <div class="border p-4 rounded bg-red-50 text-red-600 mt-4">
+        Hiện chưa có lịch khởi hành cho tour này.
+    </div>
 
-                            <button type="submit"
-                                    class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
-                                Đặt ngay
-                            </button>
-                        </form>
-
-                    @else
-
-                        <div class="text-red-500 font-semibold">
-                            Hiện chưa có lịch khởi hành khả dụng
-                        </div>
-
-                    @endif
+@endif
 
                 </div>
             </div>
