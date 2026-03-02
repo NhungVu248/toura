@@ -17,18 +17,26 @@ class Tour extends Model
         'slug',
         'destination',
         'departure_location',
-        'location_address',     // optional, nếu đã thêm
+        'location_address',
         'duration',
         'short_description',
         'description',
+
+        'highlights',
+        'included_services',
+        'itinerary',
+        'cancellation_policy',
+        'booking_conditions',
+
         'price_adult',
         'price_child',
-        'price_original',       // optional, để hiển thị giá gốc
+        'price_original',
+
         'thumbnail',
         'status',
         'is_featured',
-        'capacity',             // optional, số chỗ mặc định
-        'cancellation_policy',  // optional
+        'capacity',
+
         'rating_avg',
         'rating_count',
     ];

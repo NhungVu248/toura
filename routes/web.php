@@ -90,7 +90,9 @@ Route::prefix('admin')->group(function () {
             'tour' => 'id'
         ])
         ->names('admin.tours');
-        
+        Route::delete('/admin/tours/images/{id}', 
+        [TourController::class, 'deleteImage'])
+        ->name('admin.tours.images.delete');
         Route::get('/booking', function () {
             return "Booking page (chưa làm)";
         })->name('admin.booking');
