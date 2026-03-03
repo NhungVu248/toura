@@ -13,6 +13,8 @@ use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\TourController as AdminTourController;
 use App\Http\Controllers\TourController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\Client\BookingController as ClientBookingController;
+use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -46,6 +48,9 @@ Route::get('/tours/{tour:slug}', [TourController::class, 'show'])
 Route::post('/tours/{tour}/reviews', 
         [ReviewController::class, 'store']
          )->middleware('auth')->name('tours.reviews.store');
+         Route::get('/tours/{tour}/book', [ClientBookingController::class, 'create'])->name('booking.create');
+Route::post('/bookings', [ClientBookingController::class, 'store'])->name('booking.store');
+Route::get('/bookings/{booking}', [ClientBookingController::class, 'show'])->name('booking.show'); // optional
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -93,6 +98,12 @@ Route::prefix('admin')->group(function () {
         Route::delete('/admin/tours/images/{id}', 
         [TourController::class, 'deleteImage'])
         ->name('admin.tours.images.delete');
+
+         Route::get('/bookings', [AdminBookingController::class, 'index'])->name('admin.bookings.index');
+            Route::get('/bookings/{booking}', [AdminBookingController::class, 'show'])->name('admin.bookings.show');
+            Route::post('/bookings/{booking}/confirm', [AdminBookingController::class, 'confirm'])->name('admin.bookings.confirm');
+            Route::post('/bookings/{booking}/mark-paid', [AdminBookingController::class, 'markPaid'])->name('admin.bookings.markPaid');
+            Route::delete('/bookings/{booking}', [AdminBookingController::class, 'destroy'])->name('admin.bookings.destroy');
         Route::get('/booking', function () {
             return "Booking page (chưa làm)";
         })->name('admin.booking');

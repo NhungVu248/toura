@@ -445,7 +445,10 @@
                         <button class="px-4 py-2 border rounded-md bg-white text-gray-700">Chia sẻ</button>
 
                         @if($tour->upcomingSchedules->count())
-                            <a href="#" class="px-5 py-2 rounded-md bg-gradient-to-r from-pink-500 to-yellow-500 text-white">Đặt tour ngay</a>
+                            <a href="{{ route('booking.create', $tour->id) }}"
+                            class="px-5 py-2 rounded-md bg-gradient-to-r from-pink-500 to-yellow-500 text-white hover:opacity-90 transition">
+                                Đặt tour ngay
+                            </a>
                         @else
                             <button disabled class="px-5 py-2 rounded-md bg-gray-300 text-white cursor-not-allowed">Đặt tour (sắp ra mắt)</button>
                         @endif
