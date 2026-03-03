@@ -58,6 +58,11 @@
                            name="password"
                            class="form-control"
                            required>
+                    <div class="text-end mt-2">
+                        <a href="{{ route('admin.password.request') }}" class="text-decoration-none small">
+                            Quên mật khẩu?
+                        </a>
+                    </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 mb-3">

@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\ActivationController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\Auth\AdminLoginController;
+use App\Http\Controllers\Admin\Auth\AdminForgotPasswordController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\TourController as AdminTourController;
 use App\Http\Controllers\TourController;
@@ -67,7 +68,16 @@ Route::prefix('admin')->group(function () {
 
     Route::post('/register', [AdminLoginController::class, 'register'])
         ->name('admin.register.submit');
+        
+    Route::get('password/reset', [AdminForgotPasswordController::class, 'showLinkRequestForm'])->name('admin.password.request');
+    Route::post('password/email', [AdminForgotPasswordController::class, 'sendResetLinkEmail'])->name('admin.password.email');
 
+   // Trang nhập mật khẩu mới (Bỏ {token}, dùng email làm tham số xác định)
+    Route::get('password/reset-confirm', [AdminForgotPasswordController::class, 'showResetForm'])->name('admin.password.reset.form');
+
+    // Xử lý cập nhật mật khẩu mới vào Database
+    Route::post('password/reset-update', [AdminForgotPasswordController::class, 'reset'])->name('admin.password.update');
+    
     Route::middleware('auth:admin')->group(function () {
 
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])
