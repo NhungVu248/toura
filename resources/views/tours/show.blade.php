@@ -1,20 +1,46 @@
 <x-app-layout>
     <div class="relative">
-        {{-- HERO IMAGE --}}
-        <div class="w-full h-96 relative overflow-hidden">
-            @if(isset($tour->images) && $tour->images->count())
-                <img id="heroImage" src="{{ asset('storage/' . $tour->images->first()->path) }}"
-                     alt="{{ $tour->title }}"
+        {{-- HERO GALLERY --}}
+<div class="container mx-auto px-6 mt-6">
+    @php
+        $gallery = $tour->images;
+    @endphp
+
+    @if($gallery && $gallery->count())
+        <div class="grid grid-cols-4 grid-rows-2 gap-2 h-[420px] rounded-2xl overflow-hidden">
+
+            {{-- ẢNH LỚN --}}
+            <div class="col-span-2 row-span-2 relative cursor-pointer"
+                 onclick="openGallery(0)">
+                <img src="{{ asset('storage/' . $gallery[0]->path) }}"
                      class="w-full h-full object-cover">
-            @elseif($tour->thumbnail)
-                <img id="heroImage" src="{{ asset('storage/' . $tour->thumbnail) }}" alt="{{ $tour->title }}"
-                     class="w-full h-full object-cover">
-            @else
-                <div class="w-full h-full bg-gray-200"></div>
+            </div>
+
+            {{-- ẢNH NHỎ --}}
+            @foreach($gallery->slice(1,4) as $index => $img)
+                <div class="relative cursor-pointer"
+                     onclick="openGallery({{ $index+1 }})">
+                    <img src="{{ asset('storage/' . $img->path) }}"
+                         class="w-full h-full object-cover">
+                </div>
+            @endforeach
+
+            {{-- ẢNH CUỐI + OVERLAY --}}
+            @if($gallery->count() > 5)
+                <div class="relative cursor-pointer"
+                     onclick="openGallery(0)">
+                    <img src="{{ asset('storage/' . $gallery[5]->path) }}"
+                         class="w-full h-full object-cover">
+
+                    <div class="absolute inset-0 bg-black/50 flex items-center justify-center text-white font-semibold text-lg">
+                        + Xem tất cả hình ảnh
+                    </div>
+                </div>
             @endif
 
-            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
         </div>
+    @endif
+</div>
 
         <div class="container mx-auto p-6 -mt-14">
             <div class="bg-white rounded-xl shadow-lg overflow-hidden p-6">
@@ -37,6 +63,82 @@
                     </div>
 
                     {{-- QUICK INFO BUBBLES --}}
+                    @php
+                    // Duration (đã là string trong DB)
+                    $durationText = $tour->duration ?? '—';
+
+                    // Schedule
+                    $firstSchedule = $tour->upcomingSchedules->first();
+                    $seats_info = $firstSchedule
+                        ? ($firstSchedule->seats_available . ' / ' . $firstSchedule->seats_total . ' chỗ')
+                        : '—';
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Highlights
+                    |--------------------------------------------------------------------------
+                    */
+                    $highlights = [];
+                    if (!empty($tour->highlights)) {
+                        $decoded = json_decode($tour->highlights, true);
+                        if (is_array($decoded)) {
+                            $highlights = $decoded;
+                        } else {
+                            $highlights = explode("\n", $tour->highlights);
+                        }
+                    }
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Included Services
+                    |--------------------------------------------------------------------------
+                    */
+                    $included = [];
+                    if (!empty($tour->included_services)) {
+                        $decoded = json_decode($tour->included_services, true);
+                        if (is_array($decoded)) {
+                            $included = $decoded;
+                        } else {
+                            $included = explode("\n", $tour->included_services);
+                        }
+                    }
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Itinerary
+                    |--------------------------------------------------------------------------
+                    */
+                    $itinerary = [];
+                    if (!empty($tour->itinerary)) {
+                        $decoded = json_decode($tour->itinerary, true);
+                        if (is_array($decoded)) {
+                            $itinerary = $decoded;
+                        }
+                    }
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Booking Conditions
+                    |--------------------------------------------------------------------------
+                    */
+                    $bookingConditions = [];
+                    if (!empty($tour->booking_conditions)) {
+                        $decoded = json_decode($tour->booking_conditions, true);
+                        if (is_array($decoded)) {
+                            $bookingConditions = $decoded;
+                        } else {
+                            $bookingConditions = explode("\n", $tour->booking_conditions);
+                        }
+                    }
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Cancellation Policy
+                    |--------------------------------------------------------------------------
+                    */
+                    $policy = $tour->cancellation_policy ?? null;
+                @endphp
+
                     <div class="flex gap-4 items-center">
                         <div class="bg-gradient-to-r from-pink-50 to-yellow-50 px-4 py-3 rounded-lg flex items-center gap-3">
                             <div class="p-2 bg-white rounded-full">
@@ -44,7 +146,7 @@
                             </div>
                             <div>
                                 <div class="text-xs text-gray-500">Thời gian</div>
-                                <div class="font-semibold">{{ $tour->duration }} ngày</div>
+                                <div class="font-semibold">{{ $durationText }}</div>
                             </div>
                         </div>
 
@@ -54,10 +156,6 @@
                             </div>
                             <div>
                                 <div class="text-xs text-gray-500">Số chỗ còn</div>
-                                @php
-                                    $firstSchedule = $tour->upcomingSchedules->first();
-                                    $seats_info = $firstSchedule ? ($firstSchedule->seats_available . ' / ' . $firstSchedule->seats_total . ' chỗ') : '—';
-                                @endphp
                                 <div class="font-semibold">{{ $seats_info }}</div>
                             </div>
                         </div>
@@ -95,16 +193,6 @@
 
                         <h4 class="text-lg font-semibold mb-3">Điểm nổi bật</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
-                            @php
-                                $highlights = [
-                                    'Cầu Vàng Bà Nà Hills',
-                                    'Phố cổ Hội An về đêm',
-                                    'Ngũ Hành Sơn',
-                                    'Bãi biển Mỹ Khê',
-                                    'Ẩm thực cao lầu, mì Quảng',
-                                    'Khách sạn 4 sao'
-                                ];
-                            @endphp
                             @foreach($highlights as $h)
                                 <div class="p-3 rounded-lg bg-green-50 flex items-center gap-3">
                                     <svg class="w-4 h-4 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>
@@ -115,69 +203,41 @@
 
                         <h4 class="text-lg font-semibold mb-3">Dịch vụ bao gồm</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-                            <div class="flex items-start gap-3">
-                                <svg class="w-5 h-5 text-green-500 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>
-                                <div>Xe đưa đón theo chương trình</div>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <svg class="w-5 h-5 text-green-500 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>
-                                <div>Khách sạn tiêu chuẩn</div>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <svg class="w-5 h-5 text-green-500 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>
-                                <div>Bữa ăn theo chương trình</div>
-                            </div>
-                            <div class="flex items-start gap-3">
-                                <svg class="w-5 h-5 text-green-500 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>
-                                <div>Vé tham quan các điểm</div>
-                            </div>
+                            @foreach($included as $inc)
+                                <div class="flex items-start gap-3">
+                                    <svg class="w-5 h-5 text-green-500 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>
+                                    <div>{{ $inc }}</div>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
 
                     {{-- ITINERARY --}}
                     <div class="tab-panel hidden" id="itinerary">
                         <h3 class="text-xl font-semibold mb-4">Lịch trình chi tiết</h3>
-                        @php
-                            $itinerary = [
-                                ['day'=>'Ngày 1','title'=>'Khởi hành và check-in','activities'=>[
-                                    '06:00 - Xe và hướng dẫn viên đón quý khách tại điểm hẹn',
-                                    '09:00 - Dừng chân nghỉ ngơi, dùng điểm tâm sáng',
-                                    '12:00 - Đến nơi, làm thủ tục nhận phòng khách sạn',
-                                    '14:00 - Tham quan điểm du lịch đầu tiên',
-                                    '18:00 - Dùng bữa tối, tự do khám phá khu vực',
-                                ]],
-                                ['day'=>'Ngày 2','title'=>'Khám phá các điểm nổi bật','activities'=>[
-                                    '07:00 - Ăn sáng buffet tại khách sạn',
-                                    '08:30 - Khởi hành tham quan các điểm chính',
-                                    '12:00 - Dùng bữa trưa với đặc sản địa phương',
-                                    '14:00 - Tiếp tục hành trình khám phá',
-                                    '19:00 - Bữa tối và nghỉ ngơi tại khách sạn',
-                                ]],
-                                ['day'=>'Ngày cuối','title'=>'Tự do và trở về','activities'=>[
-                                    '07:00 - Ăn sáng và làm thủ tục trả phòng',
-                                    '08:00 - Thời gian tự do mua sắm quà lưu niệm',
-                                    '10:00 - Khởi hành về điểm đón ban đầu',
-                                    '14:00 - Nghỉ chân, dùng bữa trưa',
-                                    '18:00 - Về đến điểm đón, kết thúc chuyến đi',
-                                ]],
-                            ];
-                        @endphp
 
                         <div class="space-y-6">
                             @foreach($itinerary as $day)
-                                <div class="flex gap-6">
-                                    <div class="w-2 bg-pink-500 rounded-l"></div>
-                                    <div class="flex-1">
-                                        <div class="inline-block bg-gradient-to-r from-pink-500 to-yellow-500 text-white px-3 py-1 rounded-full text-sm mb-2">{{ $day['day'] }}</div>
-                                        <h4 class="text-lg font-semibold mb-2">{{ $day['title'] }}</h4>
+                            <div class="flex gap-6">
+                                <div class="w-2 bg-pink-500 rounded-l"></div>
+                                <div class="flex-1">
+                                    <div class="inline-block bg-gradient-to-r from-pink-500 to-yellow-500 text-white px-3 py-1 rounded-full text-sm mb-2">
+                                        {{ $day['day'] ?? '' }}
+                                    </div>
+                                    <h4 class="text-lg font-semibold mb-2">
+                                        {{ $day['title'] ?? '' }}
+                                    </h4>
+
+                                    @if(!empty($day['activities']))
                                         <ul class="list-disc list-inside text-gray-700 space-y-1">
                                             @foreach($day['activities'] as $act)
                                                 <li>{{ $act }}</li>
                                             @endforeach
                                         </ul>
-                                    </div>
+                                    @endif
                                 </div>
-                            @endforeach
+                            </div>
+                        @endforeach
                         </div>
                     </div>
 
@@ -185,6 +245,66 @@
                     <div class="tab-panel hidden" id="reviews">
                         <h3 class="text-xl font-semibold mb-4">Đánh giá từ khách hàng</h3>
 
+                        {{-- FORM REVIEW: thêm vào tab reviews --}}
+                        @auth
+                            <div class="border p-4 rounded mb-6 bg-white">
+                                <h3 class="font-semibold mb-3">Viết đánh giá</h3>
+
+                                @if(session('success'))
+                                    <div class="text-green-600 mb-2">
+                                        {{ session('success') }}
+                                    </div>
+                                @endif
+
+                                @if(session('error'))
+                                    <div class="text-red-600 mb-2">
+                                        {{ session('error') }}
+                                    </div>
+                                @endif
+
+                                <form action="{{ route('tours.reviews.store', $tour->id) }}" method="POST">
+                                    @csrf
+
+                                    <div class="mb-3">
+                                        <label class="block mb-1 font-medium">Đánh giá</label>
+                                        <select name="rating"
+                                                class="border rounded w-full px-3 py-2"
+                                                required>
+                                            <option value="">-- Chọn số sao --</option>
+                                            <option value="5">5 - Tuyệt vời</option>
+                                            <option value="4">4 - Tốt</option>
+                                            <option value="3">3 - Trung bình</option>
+                                            <option value="2">2 - Kém</option>
+                                            <option value="1">1 - Rất kém</option>
+                                        </select>
+                                        @error('rating')
+                                            <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="block mb-1 font-medium">Nhận xét</label>
+                                        <textarea name="comment"
+                                                rows="3"
+                                                class="border rounded w-full px-3 py-2"
+                                                placeholder="Chia sẻ trải nghiệm của bạn...">{{ old('comment') }}</textarea>
+                                        @error('comment')
+                                            <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Gửi đánh giá</button>
+                                </form>
+                            </div>
+                        @endauth
+
+                        @guest
+                            <div class="border p-4 rounded mb-6 text-gray-600">
+                                Bạn cần <a href="{{ route('login') }}" class="text-blue-600 underline">đăng nhập</a> để viết đánh giá.
+                            </div>
+                        @endguest
+
+                        {{-- Rating summary + list --}}
                         <div class="bg-gray-50 p-6 rounded-lg mb-6">
                             <div class="flex items-center gap-6">
                                 <div class="text-4xl font-bold text-pink-500">{{ number_format($tour->rating_avg ?? 0, 1) }}</div>
@@ -194,7 +314,17 @@
                                             <div class="w-1/5">
                                                 <div class="text-sm">{{ $i }} sao</div>
                                                 <div class="h-2 bg-gray-200 rounded mt-1 overflow-hidden">
-                                                    <div class="h-full bg-yellow-400" style="width: {{ $i==5? '70%':($i==4?'20%':'10%') }}"></div>
+                                                    @php
+                                                    $totalReviews = max($tour->rating_count, 1);
+                                                    $starCount = $tour->approvedReviews()
+                                                                    ->where('rating', $i)
+                                                                    ->count();
+                                                    $percent = ($starCount / $totalReviews) * 100;
+                                                    @endphp
+
+                                                <div class="h-full bg-yellow-400" 
+                                                    style="width: {{ $percent }}%">
+                                                </div>
                                                 </div>
                                             </div>
                                         @endfor
@@ -237,21 +367,30 @@
                     <div class="tab-panel hidden" id="policy">
                         <div class="p-4 border rounded-lg bg-yellow-50">
                             <h4 class="font-semibold mb-2">Chính sách hủy tour</h4>
-                            <ul class="list-disc list-inside text-gray-700">
-                                <li><strong>Hủy trước 7 ngày:</strong> Hoàn lại 80% tổng giá trị tour</li>
-                                <li><strong>Hủy trước 3-7 ngày:</strong> Hoàn lại 50% tổng giá trị tour</li>
-                                <li><strong>Hủy trong vòng 3 ngày:</strong> Không hoàn lại</li>
-                            </ul>
+
+                            @if($policy)
+                                {{-- nếu policy là text dài --}}
+                                {!! nl2br(e($policy)) !!}
+                            @else
+                                <ul class="list-disc list-inside text-gray-700">
+                                    <li><strong>Hủy trước 7 ngày:</strong> Hoàn lại 80% tổng giá trị tour</li>
+                                    <li><strong>Hủy trước 3-7 ngày:</strong> Hoàn lại 50% tổng giá trị tour</li>
+                                    <li><strong>Hủy trong vòng 3 ngày:</strong> Không hoàn lại</li>
+                                </ul>
+                            @endif
+
                             <p class="text-xs text-gray-500 mt-2">* Ngày được tính từ ngày khởi hành tour, không tính ngày nghỉ lễ, Tết</p>
                         </div>
 
                         <div class="mt-4">
                             <h4 class="font-semibold mb-2">Điều kiện đặt tour</h4>
                             <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-gray-700">
-                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>Thanh toán trước 30% để giữ chỗ</li>
-                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>Trẻ em theo chính sách</li>
-                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>CMND/CCCD hoặc Hộ chiếu</li>
-                                <li class="flex items-start gap-2"><svg class="w-4 h-4 text-green-500 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>Công ty có quyền hủy khi không đủ group</li>
+                                @foreach($bookingConditions as $cond)
+                                    <li class="flex items-start gap-2">
+                                        <svg class="w-4 h-4 text-green-500 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 6L9 17l-5-5"/></svg>
+                                        {{ $cond }}
+                                    </li>
+                                @endforeach
                             </ul>
                         </div>
 
@@ -306,7 +445,10 @@
                         <button class="px-4 py-2 border rounded-md bg-white text-gray-700">Chia sẻ</button>
 
                         @if($tour->upcomingSchedules->count())
-                            <a href="#" class="px-5 py-2 rounded-md bg-gradient-to-r from-pink-500 to-yellow-500 text-white">Đặt tour ngay</a>
+                            <a href="{{ route('booking.create', $tour->id) }}"
+                            class="px-5 py-2 rounded-md bg-gradient-to-r from-pink-500 to-yellow-500 text-white hover:opacity-90 transition">
+                                Đặt tour ngay
+                            </a>
                         @else
                             <button disabled class="px-5 py-2 rounded-md bg-gray-300 text-white cursor-not-allowed">Đặt tour (sắp ra mắt)</button>
                         @endif
@@ -318,37 +460,50 @@
 
     {{-- Small JS: tabs + gallery --}}
     <script>
-        (function(){
-            // Tabs
-            const btns = document.querySelectorAll('.tab-btn');
-            const panels = document.querySelectorAll('.tab-panel');
-            function activate(tab) {
-                btns.forEach(b => { b.classList.remove('bg-white'); b.classList.remove('shadow'); });
-                panels.forEach(p => p.classList.add('hidden'));
-                document.querySelector('.tab-btn[data-tab="'+tab+'"]').classList.add('bg-white','shadow');
-                document.getElementById(tab).classList.remove('hidden');
-            }
-            btns.forEach(b => {
-                b.addEventListener('click', (e) => { activate(b.dataset.tab); });
-            });
-            // default
-            if(btns.length) activate('overview');
-
-            // gallery thumbnails (if exist)
-            const thumbs = document.querySelectorAll('[onclick^="changeImage"]');
-            if(thumbs.length){
-                document.querySelectorAll('[onclick^="changeImage"]').forEach(btn=>{
-                    btn.addEventListener('click', function(e){
-                        // onclick already inlined when thumbnails generated; but keep fallback
-                    });
-                });
-            }
-        })();
-        function changeImage(src){
-            const hero = document.getElementById('heroImage');
-            const main = document.getElementById('mainImage');
-            if(hero) hero.src = src;
-            if(main) main.src = src;
+    (function(){
+        // Tabs
+        const btns = document.querySelectorAll('.tab-btn');
+        const panels = document.querySelectorAll('.tab-panel');
+        function activate(tab) {
+            btns.forEach(b => { b.classList.remove('bg-white'); b.classList.remove('shadow'); });
+            panels.forEach(p => p.classList.add('hidden'));
+            document.querySelector('.tab-btn[data-tab="'+tab+'"]').classList.add('bg-white','shadow');
+            document.getElementById(tab).classList.remove('hidden');
         }
-    </script>
+        btns.forEach(b => {
+            b.addEventListener('click', () => { activate(b.dataset.tab); });
+        });
+        if(btns.length) activate('overview');
+    })();
+
+    // ===== GALLERY =====
+    let images = [
+        @foreach($tour->images as $img)
+            "{{ asset('storage/' . $img->path) }}",
+        @endforeach
+    ];
+
+    let currentIndex = 0;
+
+    function openGallery(index) {
+        currentIndex = index;
+        document.getElementById('galleryImage').src = images[index];
+        document.getElementById('galleryModal').classList.remove('hidden');
+        document.getElementById('galleryModal').classList.add('flex');
+    }
+
+    function closeGallery() {
+        document.getElementById('galleryModal').classList.add('hidden');
+    }
+
+    function nextImage() {
+        currentIndex = (currentIndex + 1) % images.length;
+        document.getElementById('galleryImage').src = images[currentIndex];
+    }
+
+    function prevImage() {
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        document.getElementById('galleryImage').src = images[currentIndex];
+    }
+</script>
 </x-app-layout>

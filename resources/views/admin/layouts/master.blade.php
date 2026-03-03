@@ -78,9 +78,9 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('admin.booking') ?? '#' }}"
-                       class="nav-link">
-                        <i class="fa fa-book me-2"></i> Booking
+                    <a href="{{ route('admin.bookings.index') }}"
+                    class="nav-link {{ request()->routeIs('admin.bookings.*') ? 'active' : '' }}">
+                        <i class="fa fa-book me-2"></i> Quản lý Booking
                     </a>
                 </li>
 

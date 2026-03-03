@@ -1,231 +1,266 @@
 @extends('admin.layouts.master')
 
 @section('content')
-<div class="p-6">
-    <h2 class="text-2xl font-semibold mb-6">Tạo Tour mới</h2>
-    <h2 class="text-2xl font-semibold mb-6">Tạo Tour mới</h2>
 
-{{-- ===== DEBUG ERROR BLOCK ===== --}}
-@if(session('error'))
-    <div class="bg-red-600 text-white p-3 rounded mb-4">
-        {{ session('error') }}
+<div class="container-fluid">
+
+    {{-- HEADER --}}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="mb-0">Tạo Tour mới</h4>
+
+        <a href="{{ route('admin.tours.index') }}"
+           class="btn btn-secondary">
+            <i class="fa fa-arrow-left me-2"></i> Quay lại
+        </a>
     </div>
-@endif
 
-@if ($errors->any())
-    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-        <strong class="block mb-2">Có lỗi xảy ra:</strong>
-        <ul class="list-disc pl-5 space-y-1">
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-{{-- ===== END DEBUG BLOCK ===== --}}
-    <form method="POST" action="{{ route('admin.tours.store') }}" enctype="multipart/form-data">
-        @csrf
-
-        <div class="grid grid-cols-2 gap-6">
-
-            <div>
-                <label class="block font-medium mb-1">Title</label>
-                <input type="text" name="title"
-                       class="w-full border rounded px-3 py-2"
-                       value="{{ old('title') }}" required>
-                @error('title')
-                    <div class="text-red-600 text-sm mt-1">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div>
-                <label class="block font-medium mb-1">Destination</label>
-                <input type="text" name="destination"
-                       class="w-full border rounded px-3 py-2"
-                       value="{{ old('destination') }}" required>
-            </div>
-
-            <div>
-                <label class="block font-medium mb-1">Departure Location</label>
-                <input type="text" name="departure_location"
-                       class="w-full border rounded px-3 py-2"
-                       value="{{ old('departure_location') }}" required>
-            </div>
-
-            <div>
-                <label class="block font-medium mb-1">Duration (days)</label>
-                <input type="number" name="duration"
-                       class="w-full border rounded px-3 py-2"
-                       value="{{ old('duration', 1) }}" min="1" required>
-            </div>
-
-            <div>
-                <label class="block font-medium mb-1">Price adult</label>
-                <input type="text" name="price_adult"
-                       class="w-full border rounded px-3 py-2"
-                       value="{{ old('price_adult') }}" required>
-            </div>
-
-            <div>
-                <label class="block font-medium mb-1">Price child</label>
-                <input type="text" name="price_child"
-                       class="w-full border rounded px-3 py-2"
-                       value="{{ old('price_child') }}">
-            </div>
-
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
+    @endif
 
-        <div class="mt-6">
-            <label class="block font-medium mb-1">Short description</label>
-            <textarea name="short_description"
-                      class="w-full border rounded px-3 py-2"
-                      required>{{ old('short_description') }}</textarea>
-        </div>
+    <div class="card shadow-sm">
+        <div class="card-body">
 
-        <div class="mt-6">
-            <label class="block font-medium mb-1">Description</label>
-            <textarea name="description" rows="6"
-                      class="w-full border rounded px-3 py-2"
-                      required>{{ old('description') }}</textarea>
-        </div>
+            <form method="POST"
+                  action="{{ route('admin.tours.store') }}"
+                  enctype="multipart/form-data">
+                @csrf
 
-        {{-- Thumbnail --}}
-        <div class="mt-6">
-            <label class="block font-medium mb-1">Thumbnail</label>
-            <input type="file" name="thumbnail"
-                   class="w-full border rounded px-3 py-2"
-                   accept="image/*">
-        </div>
+                <div class="row">
 
-        {{-- Gallery Images --}}
-        <div class="mt-6">
-            <label class="block font-medium mb-1">Gallery Images</label>
-            <input type="file" name="images[]"
-                   multiple
-                   class="w-full border rounded px-3 py-2"
-                   accept="image/*">
-        </div>
-
-        <div class="grid grid-cols-2 gap-6 mt-6">
-            <div>
-                <label class="block font-medium mb-1">Status</label>
-                <select name="status"
-                        class="w-full border rounded px-3 py-2">
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                </select>
-            </div>
-
-            <div class="flex items-center mt-8">
-                <input type="checkbox" name="is_featured" value="1"
-                       class="mr-2"
-                       {{ old('is_featured') ? 'checked' : '' }}>
-                <label>Mark as featured</label>
-            </div>
-        </div>
-
-        {{-- ================= LỊCH KHỞI HÀNH ================= --}}
-        <div class="mt-10 border-t pt-6">
-            <h3 class="text-xl font-semibold mb-4">Lịch khởi hành</h3>
-
-            <div id="schedule-container">
-
-                <div class="grid grid-cols-5 gap-4 mb-4">
-
-                    <div>
-                        <label class="block font-medium mb-1">Ngày</label>
-                        <input type="date"
-                               name="schedules[0][departure_date]"
-                               class="w-full border rounded px-3 py-2">
+                    {{-- TIÊU ĐỀ --}}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Tiêu đề</label>
+                        <input type="text" name="title"
+                               class="form-control"
+                               value="{{ old('title') }}" required>
                     </div>
 
-                    <div>
-                        <label class="block font-medium mb-1">Giờ</label>
-                        <input type="time"
-                               name="schedules[0][departure_time]"
-                               class="w-full border rounded px-3 py-2">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Điểm đến</label>
+                        <input type="text" name="destination"
+                               class="form-control"
+                               value="{{ old('destination') }}" required>
                     </div>
 
-                    <div>
-                        <label class="block font-medium mb-1">Tổng chỗ</label>
-                        <input type="number"
-                               name="schedules[0][seats_total]"
-                               value="30"
-                               min="1"
-                               class="w-full border rounded px-3 py-2">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Nơi khởi hành</label>
+                        <input type="text" name="departure_location"
+                               class="form-control"
+                               value="{{ old('departure_location') }}" required>
                     </div>
 
-                    <div>
-                        <label class="block font-medium mb-1">Giá riêng</label>
-                        <input type="text"
-                               name="schedules[0][price_override]"
-                               class="w-full border rounded px-3 py-2">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Địa chỉ chi tiết</label>
+                        <input type="text" name="location_address"
+                               class="form-control"
+                               value="{{ old('location_address') }}">
                     </div>
 
-                    <div>
-                        <label class="block font-medium mb-1">Trạng thái</label>
-                        <select name="schedules[0][status]"
-                                class="w-full border rounded px-3 py-2">
-                            <option value="open">Open</option>
-                            <option value="sold_out">Sold Out</option>
-                            <option value="cancelled">Cancelled</option>
-                        </select>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Thời gian</label>
+                        <input type="text" name="duration"
+                               class="form-control"
+                               value="{{ old('duration') }}"
+                               placeholder="Ví dụ: 3 ngày 2 đêm"
+                               required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Sức chứa</label>
+                        <input type="number" name="capacity"
+                               class="form-control"
+                               value="{{ old('capacity',30) }}">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Giá người lớn</label>
+                        <input type="text" name="price_adult"
+                               class="form-control"
+                               value="{{ old('price_adult') }}" required>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Giá gốc</label>
+                        <input type="text" name="price_original"
+                               class="form-control"
+                               value="{{ old('price_original') }}">
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label">Giá trẻ em</label>
+                        <input type="text" name="price_child"
+                               class="form-control"
+                               value="{{ old('price_child') }}">
+                    </div>
+
+                    {{-- MÔ TẢ --}}
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Mô tả ngắn</label>
+                        <textarea name="short_description"
+                                  class="form-control"
+                                  rows="2"
+                                  required>{{ old('short_description') }}</textarea>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Mô tả chi tiết</label>
+                        <textarea name="description"
+                                  class="form-control"
+                                  rows="4"
+                                  required>{{ old('description') }}</textarea>
+                    </div>
+
+                    {{-- HIGHLIGHTS --}}
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Highlights</label>
+                        <textarea name="highlights"
+                                  class="form-control"
+                                  rows="3">{{ old('highlights') }}</textarea>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Dịch vụ bao gồm</label>
+                        <textarea name="included_services"
+                                  class="form-control"
+                                  rows="3">{{ old('included_services') }}</textarea>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Lịch trình</label>
+                        <textarea name="itinerary"
+                                  class="form-control"
+                                  rows="4">{{ old('itinerary') }}</textarea>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Chính sách hủy</label>
+                        <textarea name="cancellation_policy"
+                                  class="form-control"
+                                  rows="3">{{ old('cancellation_policy') }}</textarea>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <label class="form-label">Điều kiện đặt tour</label>
+                        <textarea name="booking_conditions"
+                                  class="form-control"
+                                  rows="3">{{ old('booking_conditions') }}</textarea>
+                    </div>
+
+                    {{-- ẢNH --}}
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Thumbnail</label>
+                        <input type="file"
+                               name="thumbnail"
+                               class="form-control"
+                               accept="image/*">
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Ảnh phụ</label>
+                        <input type="file"
+                               name="images[]"
+                               multiple
+                               class="form-control"
+                               accept="image/*">
                     </div>
 
                 </div>
 
-            </div>
+                <hr class="my-4">
 
-            <button type="button"
-                    onclick="addSchedule()"
-                    class="bg-gray-200 px-4 py-2 rounded hover:bg-gray-300">
-                + Thêm lịch khởi hành
-            </button>
+                {{-- LỊCH KHỞI HÀNH --}}
+                <h5 class="mb-3">Lịch khởi hành</h5>
+
+                <div id="schedule-container"></div>
+
+                <button type="button"
+                        onclick="addSchedule()"
+                        class="btn btn-outline-secondary mb-4">
+                    + Thêm lịch
+                </button>
+
+                <hr>
+
+                {{-- STATUS --}}
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Trạng thái</label>
+                        <select name="status" class="form-select">
+                            <option value="active">Active</option>
+                            <option value="inactive">Inactive</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-3 d-flex align-items-end">
+                        <div class="form-check">
+                            <input type="checkbox"
+                                   name="is_featured"
+                                   value="1"
+                                   class="form-check-input">
+                            <label class="form-check-label">
+                                Đánh dấu nổi bật
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit"
+                        class="btn btn-success">
+                    <i class="fa fa-save me-2"></i> Lưu Tour
+                </button>
+
+            </form>
+
         </div>
+    </div>
 
-        <div class="mt-8">
-            <button type="submit"
-                    class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-                Lưu Tour
-            </button>
-        </div>
-
-    </form>
 </div>
 
 <script>
-let scheduleIndex = 1;
+let scheduleIndex = 0;
 
 function addSchedule() {
+
     const container = document.getElementById('schedule-container');
 
     const html = `
-    <div class="grid grid-cols-5 gap-4 mb-4">
-        <div>
+    <div class="row mb-3 border p-3 rounded">
+        <div class="col-md-3">
             <input type="date"
                    name="schedules[${scheduleIndex}][departure_date]"
-                   class="w-full border rounded px-3 py-2">
+                   class="form-control">
         </div>
-        <div>
+
+        <div class="col-md-2">
             <input type="time"
                    name="schedules[${scheduleIndex}][departure_time]"
-                   class="w-full border rounded px-3 py-2">
+                   class="form-control">
         </div>
-        <div>
+
+        <div class="col-md-2">
             <input type="number"
                    name="schedules[${scheduleIndex}][seats_total]"
                    value="30"
-                   min="1"
-                   class="w-full border rounded px-3 py-2">
+                   class="form-control">
         </div>
-        <div>
+
+        <div class="col-md-3">
             <input type="text"
                    name="schedules[${scheduleIndex}][price_override]"
-                   class="w-full border rounded px-3 py-2">
+                   placeholder="Giá riêng"
+                   class="form-control">
         </div>
-        <div>
+
+        <div class="col-md-2">
             <select name="schedules[${scheduleIndex}][status]"
-                    class="w-full border rounded px-3 py-2">
+                    class="form-select">
                 <option value="open">Open</option>
                 <option value="sold_out">Sold Out</option>
                 <option value="cancelled">Cancelled</option>
@@ -238,4 +273,5 @@ function addSchedule() {
     scheduleIndex++;
 }
 </script>
+
 @endsection
