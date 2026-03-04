@@ -87,6 +87,14 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/dashboard', [AdminDashboardController::class, 'index'])
             ->name('admin.dashboard');
+        Route::get('/profile', function () {
+            return view('admin.profile');
+        })->name('admin.profile');
+        Route::get('/edit', [\App\Http\Controllers\Admin\AdminProfileController::class, 'editProfile'])->name('admin.profile.edit');
+        Route::put('/edit', [\App\Http\Controllers\Admin\AdminProfileController::class, 'updateProfile'])->name('admin.profile.update');
+        
+        Route::get('/change-password', [\App\Http\Controllers\Admin\AdminProfileController::class, 'showChangePasswordForm'])->name('admin.password.change.form');
+        Route::post('/change-password', [\App\Http\Controllers\Admin\AdminProfileController::class, 'updatePassword'])->name('admin.password.change.update');
 
         Route::post('/logout', [AdminLoginController::class, 'logout'])
             ->name('admin.logout');
