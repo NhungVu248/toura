@@ -16,6 +16,8 @@ use App\Http\Controllers\TourController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\Client\BookingController as ClientBookingController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\Admin\PaymentController;
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -52,10 +54,16 @@ Route::post('/tours/{tour}/reviews',
          Route::get('/tours/{tour}/book', [ClientBookingController::class, 'create'])->name('booking.create');
 Route::post('/bookings', [ClientBookingController::class, 'store'])->name('booking.store');
 Route::get('/bookings/{booking}', [ClientBookingController::class, 'show'])->name('booking.show'); // optional
+ Route::get('/checkout/{booking}', [CheckoutController::class,'show'])->name('checkout.show');
+    Route::post('/checkout/{booking}', [CheckoutController::class,'store'])->name('checkout.store');
+
+Route::get('/checkout-success/{payment}', [CheckoutController::class,'success'])->name('checkout.success');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    Route::get('/my-bookings',[\App\Http\Controllers\Client\BookingController::class,'myBookings'])
+    ->name('booking.my');
 });
 
 Route::prefix('admin')->group(function () {
@@ -122,11 +130,11 @@ Route::prefix('admin')->group(function () {
             Route::post('/bookings/{booking}/confirm', [AdminBookingController::class, 'confirm'])->name('admin.bookings.confirm');
             Route::post('/bookings/{booking}/mark-paid', [AdminBookingController::class, 'markPaid'])->name('admin.bookings.markPaid');
             Route::delete('/bookings/{booking}', [AdminBookingController::class, 'destroy'])->name('admin.bookings.destroy');
-        Route::get('/booking', function () {
-            return "Booking page (chưa làm)";
-        })->name('admin.booking');
-
-        // Contact
+        Route::get('/payments', [PaymentController::class,'index'])->name('payments.index');
+    Route::get('/payments/{id}', [PaymentController::class,'show'])->name('payments.show');
+    Route::post('/payments/{id}/confirm', [PaymentController::class,'confirm'])->name('payments.confirm');
+    Route::post('/payments/{id}/fail', [PaymentController::class,'fail'])->name('payments.fail');
+Route::post('/admin/payments/{payment}/confirm',[PaymentController::class,'confirm'])->name('admin.payments.confirm');        // Contact
         Route::get('/contact', function () {
             return "Contact page (chưa làm)";
         })->name('admin.contact');

@@ -12,13 +12,18 @@ class BookingController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Booking::with('tour','user')
-            ->orderByDesc('created_at');
+        $query = Booking::with([
+            'tour',
+            'user',
+            'payment'
+        ])->orderByDesc('created_at');
 
+        // Filter booking status
         if ($request->filled('status')) {
             $query->where('booking_status', $request->status);
         }
 
+        // Filter payment status
         if ($request->filled('payment')) {
             $query->where('payment_status', $request->payment);
         }
@@ -109,4 +114,5 @@ class BookingController extends Controller
             ->route('admin.bookings.index')
             ->with('success', 'Booking đã xóa.');
     }
+    
 }

@@ -57,22 +57,34 @@
 
                         <!-- Dropdown -->
                         <div x-show="dropdown"
-                             @click.away="dropdown = false"
-                             x-transition
-                             class="absolute right-0 mt-3 w-44 bg-white text-gray-800 rounded-xl shadow-xl z-50">
+                            @click.away="dropdown = false"
+                            x-transition
+                            class="absolute right-0 mt-3 w-48 bg-white text-gray-800 rounded-xl shadow-xl z-50">
 
+                            <!-- Profile -->
                             <a href="{{ route('profile.edit') }}"
-                               class="block px-4 py-3 hover:bg-gray-100">
-                                Profile
+                            class="block px-4 py-3 hover:bg-gray-100">
+                                👤 Profile
                             </a>
 
+                            <!-- My Bookings -->
+                            <a href="{{ route('booking.my') }}"
+                            class="block px-4 py-3 hover:bg-gray-100">
+                                📑 My Bookings
+                            </a>
+
+                            <!-- Divider -->
+                            <div class="border-t"></div>
+
+                            <!-- Logout -->
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <button type="submit"
                                         class="w-full text-left px-4 py-3 hover:bg-gray-100">
-                                    Logout
+                                    🚪 Logout
                                 </button>
                             </form>
+
                         </div>
                     </div>
                 @else

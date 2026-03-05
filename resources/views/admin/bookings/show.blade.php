@@ -3,7 +3,7 @@
 @section('content')
 <div class="p-6">
 
-    <h2 class="text-2xl font-semibold mb-6">
+    <h2 class="text-2xl font-semibold mb-6 text-gray-800">
         Quản lý Booking
     </h2>
 
@@ -11,9 +11,9 @@
     <form method="GET" class="mb-6 flex gap-4 items-end">
 
         <div>
-            <label class="block text-sm mb-1">Booking Status</label>
+            <label class="block text-sm mb-1 text-gray-700">Booking Status</label>
             <select name="status"
-                    class="border rounded px-3 py-2">
+                    class="border rounded px-3 py-2 text-gray-700">
                 <option value="">Tất cả</option>
                 <option value="pending"
                     {{ request('status')=='pending'?'selected':'' }}>
@@ -31,9 +31,9 @@
         </div>
 
         <div>
-            <label class="block text-sm mb-1">Payment Status</label>
+            <label class="block text-sm mb-1 text-gray-700">Payment Status</label>
             <select name="payment"
-                    class="border rounded px-3 py-2">
+                    class="border rounded px-3 py-2 text-gray-700">
                 <option value="">Tất cả</option>
                 <option value="pending"
                     {{ request('payment')=='pending'?'selected':'' }}>
@@ -50,12 +50,12 @@
             </select>
         </div>
 
-        <button class="bg-blue-600 text-white px-4 py-2 rounded">
+        <button class="bg-blue-500 hover:bg-blue-600 text-gray-900 px-4 py-2 rounded shadow">
             Lọc
         </button>
 
         <a href="{{ route('admin.bookings.index') }}"
-           class="px-4 py-2 border rounded">
+           class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 rounded">
             Reset
         </a>
     </form>
@@ -69,8 +69,8 @@
 
     {{-- TABLE --}}
     <div class="bg-white shadow rounded overflow-x-auto">
-        <table class="min-w-full text-sm">
-            <thead class="bg-gray-100">
+        <table class="min-w-full text-sm text-gray-700">
+            <thead class="bg-gray-100 text-gray-800">
                 <tr>
                     <th class="px-4 py-3 text-left">#</th>
                     <th class="px-4 py-3 text-left">Tour</th>
@@ -83,67 +83,60 @@
             </thead>
 
             <tbody>
-                @forelse($bookings as $b)
-                <tr class="border-t">
 
-                    <td class="px-4 py-3">
-                        #{{ $b->id }}
+                <tr class="border-t hover:bg-gray-50">
+
+                    <td class="px-4 py-3 font-semibold">
+                        #{{ $booking->id }}
                     </td>
 
                     <td class="px-4 py-3">
-                        {{ $b->tour->title ?? '-' }}
+                        {{ $booking->tour->title ?? '-' }}
                     </td>
 
                     <td class="px-4 py-3">
-                        {{ $b->full_name }}
+                        {{ $booking->full_name }}
                     </td>
 
                     <td class="px-4 py-3 font-semibold text-pink-600">
-                        {{ number_format($b->total_price,0,',','.') }} đ
+                        {{ number_format($booking->total_price,0,',','.') }} đ
                     </td>
 
-                    {{-- BOOKING STATUS BADGE --}}
+                    {{-- BOOKING STATUS --}}
                     <td class="px-4 py-3">
-                        <span class="px-2 py-1 text-white text-xs rounded
-                            {{ $b->booking_status=='confirmed' ? 'bg-green-500' :
-                               ($b->booking_status=='cancelled' ? 'bg-red-500' : 'bg-yellow-500') }}">
-                            {{ ucfirst($b->booking_status) }}
+                        <span class="px-2 py-1 text-xs rounded font-medium
+                            {{ $booking->booking_status=='confirmed' ? 'bg-green-100 text-green-700' :
+                               ($booking->booking_status=='cancelled' ? 'bg-red-100 text-red-700' :
+                               'bg-yellow-100 text-yellow-700') }}">
+                            {{ ucfirst($booking->booking_status) }}
                         </span>
                     </td>
 
-                    {{-- PAYMENT STATUS BADGE --}}
+                    {{-- PAYMENT STATUS --}}
                     <td class="px-4 py-3">
-                        <span class="px-2 py-1 text-white text-xs rounded
-                            {{ $b->payment_status=='paid' ? 'bg-green-600' :
-                               ($b->payment_status=='cancelled' ? 'bg-red-600' : 'bg-gray-500') }}">
-                            {{ ucfirst($b->payment_status) }}
+                        <span class="px-2 py-1 text-xs rounded font-medium
+                            {{ $booking->payment_status=='paid' ? 'bg-green-100 text-green-700' :
+                               ($booking->payment_status=='cancelled' ? 'bg-red-100 text-red-700' :
+                               'bg-yellow-100 text-yellow-700') }}">
+                            {{ ucfirst($booking->payment_status) }}
                         </span>
                     </td>
 
-                    <td class="px-4 py-3 space-x-2">
+                    <td class="px-4 py-3">
 
-                        <a href="{{ route('admin.bookings.show',$b->id) }}"
-                           class="px-3 py-1 bg-blue-500 text-white rounded text-xs">
-                            Xem
+                        <a href="{{ route('admin.bookings.index') }}"
+                           class="px-3 py-1 bg-blue-100 hover:bg-blue-200 text-blue-800 rounded text-xs font-medium">
+
+                            Quay lại
+
                         </a>
 
                     </td>
 
                 </tr>
-                @empty
-                <tr>
-                    <td colspan="7" class="px-4 py-6 text-center text-gray-500">
-                        Chưa có booking nào.
-                    </td>
-                </tr>
-                @endforelse
+
             </tbody>
         </table>
-    </div>
-
-    {{-- PAGINATION --}}
-    <div class="mt-6">
-        {{ $bookings->withQueryString()->links() }}
     </div>
 
 </div>

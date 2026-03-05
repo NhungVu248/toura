@@ -156,4 +156,8 @@ class Booking extends Model
     {
         return $query->where('booking_status', 'pending');
     }
+    public function payment()
+    {
+        return $this->hasOne(Payment::class);
+    }
 }

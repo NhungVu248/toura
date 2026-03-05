@@ -52,23 +52,34 @@
                     </button>
 
                     <!-- Dropdown -->
-                    <div x-show="open"
-                         @click.away="open = false"
-                         x-transition
-                         class="absolute right-0 mt-2 w-40 bg-white text-black rounded-lg shadow-lg py-2 z-50">
+                  <div x-show="open"
+                        @click.away="open = false"
+                        x-transition
+                        class="absolute right-0 mt-2 w-44 bg-white text-black rounded-lg shadow-lg py-2 z-50">
 
+                        <!-- Profile -->
                         <a href="{{ route('profile.edit') }}"
-                           class="block px-4 py-2 hover:bg-gray-100">
-                            Profile
+                        class="block px-4 py-2 hover:bg-gray-100">
+                            👤 Profile
                         </a>
 
+                        <!-- My Bookings -->
+                        <a href="{{ route('booking.my') }}"
+                        class="block px-4 py-2 hover:bg-gray-100">
+                            📑 My Bookings
+                        </a>
+
+                        <div class="border-t my-1"></div>
+
+                        <!-- Logout -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button type="submit"
                                     class="w-full text-left px-4 py-2 hover:bg-gray-100">
-                                Logout
+                                🚪 Logout
                             </button>
                         </form>
+
                     </div>
                 </div>
             @else
