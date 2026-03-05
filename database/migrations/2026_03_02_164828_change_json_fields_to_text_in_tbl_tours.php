@@ -10,8 +10,6 @@ return new class extends Migration {
         Schema::table('tbl_tours', function (Blueprint $table) {
             $table->text('highlights')->nullable()->change();
             $table->text('included_services')->nullable()->change();
-            $table->longText('itinerary')->nullable()->change();
-            $table->text('booking_conditions')->nullable()->change();
         });
     }
 
