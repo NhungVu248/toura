@@ -195,16 +195,10 @@
                                 style="height:100px; object-fit:cover; width:100%;">
 
                             {{-- Nếu bạn có route xóa ảnh --}}
-                            <form action="{{ route('admin.tours.images.delete', $img->id) }}"
-                                method="POST"
-                                class="position-absolute top-0 end-0">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                        class="btn btn-sm btn-danger">
-                                    ×
-                                </button>
-                            </form>
+                            <a href="{{ route('admin.tours.images.delete', $img->id) }}"
+   class="btn btn-sm btn-danger position-absolute top-0 end-0">
+   ×
+</a>
                         </div>
                     </div>
                 @endforeach

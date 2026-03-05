@@ -147,9 +147,9 @@ class TourController extends Controller
     } catch (\Exception $e) {
 
         DB::rollBack();
-
+        dd($e->getMessage());
         Log::error('Tour Store Error: ' . $e->getMessage(), [
-            'trace' => $e->getTraceAsString()
+           'trace' => $e->getTraceAsString()
         ]);
 
         return back()
