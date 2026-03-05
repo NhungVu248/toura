@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::table('tbl_tours', function (Blueprint $table) {
             $table->json('booking_conditions')->nullable();
+            $table->text('highlights')->nullable();
+            $table->text('included_services')->nullable();
         });
     }
 
