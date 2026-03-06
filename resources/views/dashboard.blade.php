@@ -24,7 +24,7 @@
             <a href="#" class="hover:text-black transition">Giới Thiệu</a>
             <a href="{{ route('tours.index') }}" class="hover:text-black transition">Tours</a>
             <a href="#" class="hover:text-black transition">Blog</a>
-            <a href="#" class="hover:text-black transition">Liên Hệ</a>
+            <a href="{{ route('contact.create') }}" class="hover:text-black transition">Liên Hệ</a>
         </div>
 
         <!-- Right Section -->

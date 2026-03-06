@@ -85,7 +85,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('admin.contact') ?? '#' }}"
+                    <a href="{{ route('admin.contacts.index') }}"
                        class="nav-link">
                         <i class="fa fa-envelope me-2"></i> Liên hệ
                     </a>

@@ -18,6 +18,8 @@ use App\Http\Controllers\Client\BookingController as ClientBookingController;
 use App\Http\Controllers\Admin\BookingController as AdminBookingController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\PaymentController;
+use App\Http\Controllers\Admin\ContactController as AdminContactController;
+use App\Http\Controllers\ContactController;
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -56,8 +58,12 @@ Route::post('/bookings', [ClientBookingController::class, 'store'])->name('booki
 Route::get('/bookings/{booking}', [ClientBookingController::class, 'show'])->name('booking.show'); // optional
  Route::get('/checkout/{booking}', [CheckoutController::class,'show'])->name('checkout.show');
     Route::post('/checkout/{booking}', [CheckoutController::class,'store'])->name('checkout.store');
-
 Route::get('/checkout-success/{payment}', [CheckoutController::class,'success'])->name('checkout.success');
+Route::get('/contact',[ContactController::class,'create'])->name('contact.create');
+
+Route::post('/contact',[ContactController::class,'store'])->name('contact.store');
+
+Route::get('/contact/thanks',[ContactController::class,'thanks'])->name('contact.thanks');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -125,19 +131,26 @@ Route::prefix('admin')->group(function () {
         [TourController::class, 'deleteImage'])
         ->name('admin.tours.images.delete');
 
-         Route::get('/bookings', [AdminBookingController::class, 'index'])->name('admin.bookings.index');
-            Route::get('/bookings/{booking}', [AdminBookingController::class, 'show'])->name('admin.bookings.show');
-            Route::post('/bookings/{booking}/confirm', [AdminBookingController::class, 'confirm'])->name('admin.bookings.confirm');
-            Route::post('/bookings/{booking}/mark-paid', [AdminBookingController::class, 'markPaid'])->name('admin.bookings.markPaid');
-            Route::delete('/bookings/{booking}', [AdminBookingController::class, 'destroy'])->name('admin.bookings.destroy');
+        Route::get('/bookings', [AdminBookingController::class, 'index'])->name('admin.bookings.index');
+        Route::get('/bookings/{booking}', [AdminBookingController::class, 'show'])->name('admin.bookings.show');
+        Route::post('/bookings/{booking}/confirm', [AdminBookingController::class, 'confirm'])->name('admin.bookings.confirm');
+        Route::post('/bookings/{booking}/mark-paid', [AdminBookingController::class, 'markPaid'])->name('admin.bookings.markPaid');
+        Route::delete('/bookings/{booking}', [AdminBookingController::class, 'destroy'])->name('admin.bookings.destroy');
         Route::get('/payments', [PaymentController::class,'index'])->name('payments.index');
-    Route::get('/payments/{id}', [PaymentController::class,'show'])->name('payments.show');
-    Route::post('/payments/{id}/confirm', [PaymentController::class,'confirm'])->name('payments.confirm');
-    Route::post('/payments/{id}/fail', [PaymentController::class,'fail'])->name('payments.fail');
-Route::post('/admin/payments/{payment}/confirm',[PaymentController::class,'confirm'])->name('admin.payments.confirm');        // Contact
-        Route::get('/contact', function () {
-            return "Contact page (chưa làm)";
-        })->name('admin.contact');
-    });
+        Route::get('/payments/{id}', [PaymentController::class,'show'])->name('payments.show');
+        Route::post('/payments/{id}/fail', [PaymentController::class,'fail'])->name('payments.fail');
+        Route::post('/admin/payments/{payment}/confirm',[PaymentController::class,'confirm'])->name('admin.payments.confirm');        // Contact
+        Route::get('/contacts',[AdminContactController::class,'index'])
+            ->name('admin.contacts.index');
+
+        Route::get('/contacts/{id}',[AdminContactController::class,'show'])
+            ->name('admin.contacts.show');
+
+        Route::post('/contacts/{id}/reply',[AdminContactController::class,'reply'])
+            ->name('admin.contacts.reply');
+
+        Route::delete('/contacts/{id}',[AdminContactController::class,'destroy'])
+            ->name('admin.contacts.destroy');
+            });
 });
 require __DIR__.'/auth.php';
