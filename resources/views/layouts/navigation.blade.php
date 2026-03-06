@@ -23,7 +23,7 @@
                     Trang Chủ
                 </a>
 
-                <a href="#" class="hover:text-black transition">Giới Thiệu</a>
+                <a href="{{ route('about') }}" class="hover:text-black transition">Giới Thiệu</a>
                 <a href="{{ route('tours.index') }}"
                     class="px-4 py-2 rounded-full font-semibold
                     {{ request()->routeIs('tours.*') 
@@ -115,7 +115,7 @@
          class="md:hidden bg-pink-500 text-white px-6 py-4 space-y-3">
 
         <a href="/" class="block">Trang Chủ</a>
-        <a href="#" class="block">Giới Thiệu</a>
+        <a href="{{ route('about') }}" class="hover:text-black transition">Giới Thiệu</a>
         <a href="{{ route('tours.index') }}" class="block">Tours</a>
         <a href="#" class="block">Blog</a>
         <a href="{{ route('contact.create') }}" class="block">Liên Hệ</a>

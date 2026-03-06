@@ -20,7 +20,7 @@
             <a href="/" class="px-4 py-2 bg-white text-pink-600 rounded-full font-semibold">
                 Trang Chủ
             </a>
-            <a href="#" class="hover:text-black transition">Giới Thiệu</a>
+            <a href="{{ route('about') }}" class="hover:text-black transition">Giới Thiệu</a>
             <a href="{{ route('tours.index') }}" class="hover:text-black transition">Tours</a>
             <a href="#" class="hover:text-black transition">Blog</a>
             <a href="{{ route('contact.create') }}" class="hover:text-black transition">Liên Hệ</a>
