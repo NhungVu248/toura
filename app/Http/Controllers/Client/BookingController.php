@@ -43,6 +43,8 @@ class BookingController extends Controller
         'email' => 'required|email|max:255',
         'phone' => 'required|string|max:20',
         'guest_quantity' => 'required|integer|min:1',
+         'adult_quantity' => 'required|integer|min:0',
+        'child_quantity' => 'required|integer|min:0',
         'travel_insurance' => 'nullable',
         'private_guide' => 'nullable',
         'airport_pickup' => 'nullable',
@@ -54,20 +56,29 @@ class BookingController extends Controller
     try {
 
         $tour = Tour::findOrFail($data['tour_id']);
-
+        $tourPrice = $tour->price_adult;
+        $childPrice = $tour->price_child ?? 0;
         $schedule = TourSchedule::where('id',$data['schedule_id'])
             ->lockForUpdate()
             ->firstOrFail();
 
-        $guestQty = (int)$data['guest_quantity'];
+        $adultQty = (int)$data['adult_quantity'];
+        $childQty = (int)$data['child_quantity'];
+
+        $guestQty = $adultQty + $childQty;
 
         if ($schedule->seats_available < $guestQty) {
             return back()->withInput()
                 ->with('error','Số chỗ còn lại không đủ.');
         }
 
-        $tourPrice = $tour->price_adult;
-        $subtotal = $tourPrice * $guestQty;
+        $priceAdult = $tour->price_adult;
+        $priceChild = $tour->price_child ?? 0;
+
+        $adultTotal = $priceAdult * $adultQty;
+        $childTotal = $priceChild * $childQty;
+
+        $subtotal = $adultTotal + $childTotal;
 
         $travelInsurance = $request->boolean('travel_insurance');
         $privateGuide = $request->boolean('private_guide');
@@ -104,8 +115,9 @@ class BookingController extends Controller
             'full_name'=>$data['full_name'],
             'email'=>$data['email'],
             'phone'=>$data['phone'],
-
-            'guest_quantity'=>$guestQty,
+            'guest_quantity' => $guestQty,
+            'adult_quantity'=>$adultQty,
+            'child_quantity'=>$childQty,
             'departure_date'=>$schedule->departure_date,
 
             'travel_insurance'=>$travelInsurance,
@@ -136,7 +148,7 @@ class BookingController extends Controller
     } catch (\Exception $e) {
 
         DB::rollBack();
-
+dd($e->getMessage());
         Log::error('Booking Error: '.$e->getMessage());
 
         return back()

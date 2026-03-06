@@ -433,12 +433,25 @@
         <div class="fixed bottom-4 left-0 right-0 flex justify-center pointer-events-none">
             <div class="max-w-6xl w-full px-6 pointer-events-auto">
                 <div class="bg-white rounded-2xl shadow-lg flex items-center justify-between p-4">
+                    <div class="flex gap-6 items-center">
+                    
                     <div>
                         <div class="text-pink-500 font-bold text-2xl">
-                            {{ number_format($tour->price_adult, 0, ',', '.') }} đ
+                            {{ number_format($tour->price_adult,0,',','.') }} đ
                         </div>
-                        <div class="text-xs text-gray-500">Giá / khách</div>
+                        <div class="text-xs text-gray-500">Người lớn</div>
                     </div>
+
+                    @if($tour->price_child)
+                    <div>
+                        <div class="text-pink-600 font-semibold text-lg">
+                            {{ number_format($tour->price_child,0,',','.') }} đ
+                        </div>
+                        <div class="text-xs text-gray-500">Trẻ em</div>
+                    </div>
+                    @endif
+
+                </div>
 
                     <div class="flex items-center gap-3">
                         <button class="px-4 py-2 border rounded-md bg-white text-gray-700">Lưu tour</button>

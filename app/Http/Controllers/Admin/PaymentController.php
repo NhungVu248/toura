@@ -1,6 +1,6 @@
 <?php
 namespace App\Http\Controllers\Admin;
-
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
 use Illuminate\Http\Request;
@@ -8,11 +8,6 @@ use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth','admin']);
-    }
-
     public function index(Request $request)
     {
         $q = Payment::with('booking','card','ewallet')->orderBy('created_at','desc');

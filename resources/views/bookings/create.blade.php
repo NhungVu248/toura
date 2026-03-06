@@ -18,6 +18,7 @@
         <form id="bookingForm" action="{{ route('booking.store') }}" method="POST" class="grid grid-rows-[auto_1fr_auto]">
             @csrf
             <input type="hidden" name="tour_id" value="{{ $tour->id }}">
+            <input type="hidden" name="guest_quantity" id="guestQuantityHidden" value="1">
 
             <div class="p-6">
                 <div class="grid md:grid-cols-2 gap-8">
@@ -52,11 +53,33 @@
                             </div>
 
                             <div>
-                                <label class="block text-sm mb-1">Số lượng khách *</label>
-                                <input id="guestQuantity" type="number" min="1" name="guest_quantity"
-                                    value="{{ old('guest_quantity',1) }}"
-                                    class="w-full bg-gray-100 rounded-lg px-4 py-2 focus:ring-2 focus:ring-pink-400 outline-none"
-                                    required>
+                                <label class="block text-sm mb-1">Số lượng vé</label>
+
+                                <div class="grid grid-cols-2 gap-3">
+
+                                    <div>
+                                        <div class="text-xs text-gray-500 mb-1">Người lớn</div>
+                                        <input id="adultQuantity"
+                                            type="number"
+                                            min="0"
+                                            name="adult_quantity"
+                                            value="{{ old('adult_quantity',1) }}"
+                                            class="w-full bg-gray-100 rounded-lg px-4 py-2 focus:ring-2 focus:ring-pink-400 outline-none">
+                                    </div>
+
+                                    <div>
+                                        <div class="text-xs text-gray-500 mb-1">Trẻ em</div>
+                                        <input id="childQuantity"
+                                            type="number"
+                                            min="0"
+                                            name="child_quantity"
+                                            value="{{ old('child_quantity',0) }}"
+                                            class="w-full bg-gray-100 rounded-lg px-4 py-2 focus:ring-2 focus:ring-pink-400 outline-none">
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div>
                                 <div id="seatsInfo" class="text-xs text-gray-400 mt-1">
                                     {{ optional($tour->upcomingSchedules->first())->seats_available ?? 0 }} chỗ còn trống
                                 </div>
@@ -168,8 +191,11 @@ function formatVND(n){
 <script>
 (function(){
     // elements
-    const pricePerGuest = parseFloat(@json((float)$tour->price_adult)); // đảm bảo là số
-    const qtyEl = document.getElementById('guestQuantity');
+    const priceAdult = parseFloat(@json((float)$tour->price_adult));
+    const priceChild = parseFloat(@json((float)$tour->price_child));
+    const adultEl = document.getElementById('adultQuantity');
+    const childEl = document.getElementById('childQuantity');
+    const guestQuantityHidden = document.getElementById('guestQuantityHidden');
     const scheduleSelect = document.getElementById('scheduleSelect');
     const seatsInfo = document.getElementById('seatsInfo');
     const seatError = document.getElementById('seatError');
@@ -197,10 +223,14 @@ function formatVND(n){
     }
 
     function recalc(){
-        const qty = Math.max(1, parseInt(qtyEl.value || 1));
-        const seats = getSelectedSeatsAvailable();
+        const adults = Math.max(0, parseInt(adultEl.value || 0));
+        const childs = Math.max(0, parseInt(childEl.value || 0));
+        const qty = adults + childs;
+
+guestQuantityHidden.value = qty;
 
         // seats info & validate
+        const seats = getSelectedSeatsAvailable();
         if(seats !== null){
             seatsInfo.textContent = seats + ' chỗ còn trống';
             if(qty > seats){
@@ -215,7 +245,10 @@ function formatVND(n){
         }
 
         // base
-        const base = pricePerGuest * qty;
+        const adultTotal = priceAdult * adults;
+        const childTotal = priceChild * childs;
+
+        const base = adultTotal + childTotal;
 
         // addons
         const selectedAddons = [];
@@ -250,7 +283,21 @@ function formatVND(n){
         // base line
         const baseRow = document.createElement('div');
         baseRow.className = 'flex justify-between text-sm';
-        baseRow.innerHTML = `<div>Giá tour × ${qty} khách</div><div>${formatVND(base)}</div>`;
+        const adultRow = document.createElement('div');
+adultRow.className = 'flex justify-between text-sm';
+adultRow.innerHTML =
+`<div>Người lớn × ${adults}</div>
+<div>${formatVND(adultTotal)}</div>`;
+summaryList.appendChild(adultRow);
+
+if(childs > 0){
+    const childRow = document.createElement('div');
+    childRow.className = 'flex justify-between text-sm';
+    childRow.innerHTML =
+    `<div>Trẻ em × ${childs}</div>
+    <div>${formatVND(childTotal)}</div>`;
+    summaryList.appendChild(childRow);
+}
         summaryList.appendChild(baseRow);
 
         // addon lines
@@ -280,7 +327,8 @@ function formatVND(n){
     }
 
     // events
-    qtyEl.addEventListener('input', recalc);
+    adultEl.addEventListener('input', recalc);
+    childEl.addEventListener('input', recalc);
     scheduleSelect.addEventListener('change', recalc);
     addonEls.forEach(el=>el.addEventListener('change', recalc));
 
@@ -311,7 +359,9 @@ function formatVND(n){
 
     // double-check on submit
     bookingForm.addEventListener('submit', function(e){
-        const qty = Math.max(1, parseInt(qtyEl.value || 1));
+        const qty =
+        parseInt(adultEl.value || 0) +
+        parseInt(childEl.value || 0);
         const seats = getSelectedSeatsAvailable();
         if(seats !== null && qty > seats){
             e.preventDefault();

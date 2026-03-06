@@ -25,8 +25,10 @@ class Booking extends Model
         'email',
         'phone',
         'guest_quantity',
-        'departure_date',
 
+        'departure_date',
+        'adult_quantity',
+        'child_quantity',
         // services
         'travel_insurance',
         'private_guide',
