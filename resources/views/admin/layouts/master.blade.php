@@ -17,7 +17,7 @@
         }
 
         .sidebar {
-            height: 100vh;
+            min-height: 100vh;
             background: #1e293b;
             color: white;
         }

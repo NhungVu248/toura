@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Client\User;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\Booking;
 class AdminDashboardController extends Controller
 {
     public function index()
@@ -19,7 +19,27 @@ class AdminDashboardController extends Controller
                 ->whereYear('created_at', now()->year)
                 ->count(),
         ];
+        // 2. Thống kê Doanh thu các tháng trong năm nay từ bảng Bookings
+        $revenueData = Booking::paid() 
+            ->selectRaw('MONTH(created_at) as month, SUM(total_price) as total')
+            ->whereYear('created_at', now()->year) 
+            ->groupBy('month')
+            ->pluck('total', 'month') 
+            ->toArray();
 
-        return view('admin.dashboard', compact('summary'));
+        $labels = [];
+        $values = [];
+
+        for ($i = 1; $i <= 12; $i++) {
+            $labels[] = 'Tháng ' . $i;
+            $values[] = (float)($revenueData[$i] ?? 0); 
+        }
+
+        $chartData = [
+            'labels' => $labels,
+            'values' => $values,
+        ];
+
+        return view('admin.dashboard', compact('summary', 'chartData'));
     }
 }

@@ -9,7 +9,7 @@
 <body class="antialiased font-sans">
 
     <div class="relative min-h-screen bg-cover bg-center bg-no-repeat flex items-center justify-center p-6" 
-         style="background-image: url('https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?q=80&w=2070&auto=format&fit=crop');">
+        style="background-image: url({{ asset('img/nen.png') }});">
         
         <div class="absolute inset-0 bg-black/30"></div>
 
