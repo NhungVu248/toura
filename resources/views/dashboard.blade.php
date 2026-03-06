@@ -10,30 +10,34 @@
     <nav class="bg-gradient-to-r from-pink-500 via-pink-400 to-yellow-400 text-white">
         <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
-            <div class="flex items-center space-x-2">
-                <span class="text-2xl font-bold">🌍 Toura</span>
+        <!-- Logo -->
+        <div class="flex items-center space-x-2">
+            <span class="text-2xl font-bold">🌍 Toura</span>
+        </div>
+
+        <!-- Menu -->
+        <div class="hidden md:flex space-x-6 font-medium">
+            <a href="/" class="px-4 py-2 bg-white text-pink-600 rounded-full font-semibold">
+                Trang Chủ
+            </a>
+            <a href="#" class="hover:text-black transition">Giới Thiệu</a>
+            <a href="{{ route('tours.index') }}" class="hover:text-black transition">Tours</a>
+            <a href="#" class="hover:text-black transition">Blog</a>
+            <a href="{{ route('contact.create') }}" class="hover:text-black transition">Liên Hệ</a>
+        </div>
+
+        <!-- Right Section -->
+        <div class="flex items-center space-x-4 relative">
+
+            <!-- Search -->
+            <div class="hidden md:flex items-center bg-white rounded-full overflow-hidden">
+                <input type="text"
+                       placeholder="Search..."
+                       class="px-4 py-1 text-black focus:outline-none">
+                <button class="px-3 text-black">
+                    🔍
+                </button>
             </div>
-
-            <div class="hidden md:flex space-x-6 font-medium">
-                <a href="/" class="px-4 py-2 bg-white text-pink-600 rounded-full font-semibold">
-                    Trang Chủ
-                </a>
-                <a href="#" class="hover:text-black transition">Giới Thiệu</a>
-                <a href="{{ route('tours.index') }}" class="hover:text-black transition">Tours</a>
-                <a href="#" class="hover:text-black transition">Blog</a>
-                <a href="#" class="hover:text-black transition">Liên Hệ</a>
-            </div>
-
-            <div class="flex items-center space-x-4 relative">
-
-                <div class="hidden md:flex items-center bg-white rounded-full overflow-hidden">
-                    <input type="text"
-                           placeholder="Search..."
-                           class="px-4 py-1 text-black focus:outline-none">
-                    <button class="px-3 text-black">
-                        🔍
-                    </button>
-                </div>
 
                 @auth
                     <div x-data="{ open: false }" class="relative">
