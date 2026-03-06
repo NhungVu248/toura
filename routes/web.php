@@ -47,6 +47,9 @@ Route::get('/auth/google/callback', [SocialAuthController::class, 'callback'])
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
+Route::get('/gioi-thieu', function () {
+    return view('about'); // Trỏ tới file resources/views/about.blade.php
+})->name('about');
 Route::get('/tours', [TourController::class, 'index'])->name('tours.index');
 Route::get('/tours/{tour:slug}', [TourController::class, 'show'])
     ->name('tours.show');
