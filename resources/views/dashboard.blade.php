@@ -23,7 +23,7 @@
             </a>
             <a href="#" class="hover:text-black transition">Giới Thiệu</a>
             <a href="{{ route('tours.index') }}" class="hover:text-black transition">Tours</a>
-            <a href="#" class="hover:text-black transition">Điểm Đến</a>
+            <a href="#" class="hover:text-black transition">Blog</a>
             <a href="#" class="hover:text-black transition">Liên Hệ</a>
         </div>
 
