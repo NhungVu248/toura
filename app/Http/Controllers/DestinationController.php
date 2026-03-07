@@ -1,0 +1,105 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Tour;
+use Illuminate\Http\Request;
+
+class DestinationController extends Controller
+{
+    public function index(Request $request)
+    {
+        $query = Tour::query()
+            ->where('status', 'active');
+
+        /*
+        |--------------------------------------------------------------------------
+        | Search theo tên tour
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('q')) {
+            $query->where('title', 'like', '%' . $request->q . '%');
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter theo destination
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('destination')) {
+            $query->where('destination', $request->destination);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter theo domain
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('domain')) {
+            $query->where('domain', $request->domain);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter theo giá
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('min_price')) {
+            $query->where('price_adult', '>=', $request->min_price);
+        }
+
+        if ($request->filled('max_price')) {
+            $query->where('price_adult', '<=', $request->max_price);
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Sorting
+        |--------------------------------------------------------------------------
+        */
+        switch ($request->get('sort')) {
+
+            case 'price_asc':
+                $query->orderBy('price_adult', 'asc');
+                break;
+
+            case 'price_desc':
+                $query->orderBy('price_adult', 'desc');
+                break;
+
+            case 'featured':
+                $query->orderBy('is_featured', 'desc');
+                break;
+
+            default:
+                $query->orderBy('created_at', 'desc');
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Pagination
+        |--------------------------------------------------------------------------
+        */
+        $tours = $query->paginate(9)
+            ->appends($request->query());
+
+        /*
+        |--------------------------------------------------------------------------
+        | Data cho filter
+        |--------------------------------------------------------------------------
+        */
+        $destinations = Tour::select('destination')
+            ->distinct()
+            ->pluck('destination');
+
+        $domains = Tour::select('domain')
+            ->distinct()
+            ->pluck('domain');
+
+        return view('destination.index', compact(
+            'tours',
+            'destinations',
+            'domains'
+        ));
+    }
+}

@@ -50,6 +50,7 @@ class TourController extends Controller
     $validated = $request->validate([
         'title' => 'required|string|max:255',
         'destination' => 'required|string|max:255',
+        'domain' => 'nullable|string',
         'departure_location' => 'required|string|max:255',
         'location_address' => 'nullable|string|max:255',
         'duration' => 'required|string|max:255',
@@ -190,6 +191,7 @@ class TourController extends Controller
     $data = $request->validate([
         'title' => 'required|string|max:255',
         'destination' => 'required|string|max:255',
+        'domain' => 'nullable|string|max:255',
         'departure_location' => 'required|string|max:255',
         'location_address' => 'nullable|string|max:255',
 

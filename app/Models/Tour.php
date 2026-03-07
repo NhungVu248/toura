@@ -16,6 +16,7 @@ class Tour extends Model
         'title',
         'slug',
         'destination',
+        'domain',
         'departure_location',
         'location_address',
         'duration',

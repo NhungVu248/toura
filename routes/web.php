@@ -20,6 +20,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\DestinationController;
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -67,6 +68,7 @@ Route::get('/contact',[ContactController::class,'create'])->name('contact.create
 Route::post('/contact',[ContactController::class,'store'])->name('contact.store');
 
 Route::get('/contact/thanks',[ContactController::class,'thanks'])->name('contact.thanks');
+Route::get('/destination', [DestinationController::class, 'index'])->name('destination.index');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

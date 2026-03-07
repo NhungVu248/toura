@@ -48,7 +48,35 @@
                                class="form-control"
                                value="{{ old('destination') }}" required>
                     </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Domain / Loại tour</label>
 
+                        <select name="domain" class="form-select">
+                            <option value="">-- Chọn loại tour --</option>
+
+                            <option value="beach" {{ old('domain')=='beach'?'selected':'' }}>
+                                Beach / Biển
+                            </option>
+
+                            <option value="mountain" {{ old('domain')=='mountain'?'selected':'' }}>
+                                Mountain / Núi
+                            </option>
+
+                            <option value="city" {{ old('domain')=='city'?'selected':'' }}>
+                                City / Thành phố
+                            </option>
+
+                            <option value="island" {{ old('domain')=='island'?'selected':'' }}>
+                                Island / Đảo
+                            </option>
+
+                            <option value="adventure" {{ old('domain')=='adventure'?'selected':'' }}>
+                                Adventure / Khám phá
+                            </option>
+
+                        </select>
+
+                    </div>
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Nơi khởi hành</label>
                         <input type="text" name="departure_location"

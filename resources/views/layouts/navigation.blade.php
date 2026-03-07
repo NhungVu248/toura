@@ -31,7 +31,7 @@
                             : 'hover:text-black transition text-white' }}">
                         Tours
                     </a>
-                <a href="#" class="hover:text-black transition">Blog</a>
+                <a href="{{ route('destination.index') }}" class="hover:text-black transition">Điểm Đến</a>
                 <a href="{{ route('contact.create') }}" class="hover:text-black transition">Liên Hệ</a>
             </div>
 
@@ -117,7 +117,7 @@
         <a href="/" class="block">Trang Chủ</a>
         <a href="{{ route('about') }}" class="hover:text-black transition">Giới Thiệu</a>
         <a href="{{ route('tours.index') }}" class="block">Tours</a>
-        <a href="#" class="block">Blog</a>
+        <a href="{{ route('destination.index') }}" class="block">Điểm đến</a>
         <a href="{{ route('contact.create') }}" class="block">Liên Hệ</a>
 
         @auth
