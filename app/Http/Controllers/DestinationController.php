@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Tour;
+use App\Models\Review;
 use Illuminate\Http\Request;
 
 class DestinationController extends Controller
@@ -96,10 +97,32 @@ class DestinationController extends Controller
             ->distinct()
             ->pluck('domain');
 
+        /*
+        |--------------------------------------------------------------------------
+        | Reviews (Social Proof Section)
+        |--------------------------------------------------------------------------
+        */
+        $reviews = Review::where('approved', 1)
+            ->with('user')
+            ->latest()
+            ->take(6)
+            ->get();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Rating thống kê
+        |--------------------------------------------------------------------------
+        */
+        $ratingAvg = Review::where('approved',1)->avg('rating');
+        $reviewCount = Review::where('approved',1)->count();
+
         return view('destination.index', compact(
             'tours',
             'destinations',
-            'domains'
+            'domains',
+            'reviews',
+            'ratingAvg',
+            'reviewCount'
         ));
     }
 }
