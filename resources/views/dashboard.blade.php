@@ -92,27 +92,31 @@
         </div>
     </nav>
     
-    <div class="py-16 text-center flex-grow">
-        <h2 class="text-3xl font-bold text-gray-800 mb-4">
+    <div class="relative py-32 text-center flex-grow bg-cover bg-center" 
+     style="background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('{{ asset('img/nen.png') }}');">
+    
+    <div class="relative z-10">
+        <h2 class="text-4xl font-bold text-white mb-4 drop-shadow-lg">
             Hệ thống Booking Du Lịch
         </h2>
 
-        <p class="text-gray-600 mb-6">
+        <p class="text-gray-100 mb-8 text-lg drop-shadow-md">
             Khám phá tour phù hợp với bạn.
         </p>
 
         @auth
             <a href="#"
-               class="px-6 py-3 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
-                Đặt tour ngay
+               class="px-8 py-4 bg-pink-500 text-white font-bold rounded-lg shadow-lg hover:bg-pink-600 transition">
+                 Đặt tour ngay
             </a>
         @else
             <a href="{{ route('register') }}"
-               class="px-6 py-3 bg-green-600 text-white rounded-lg shadow hover:bg-green-700 transition">
-                Bắt đầu ngay
+               class="px-8 py-4 bg-green-500 text-white font-bold rounded-lg shadow-lg hover:bg-green-600 transition">
+                 Bắt đầu ngay
             </a>
         @endauth
     </div>
+</div>
 
     <footer class="bg-[#0f172a] text-gray-300 py-10 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
