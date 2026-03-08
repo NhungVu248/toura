@@ -7,11 +7,11 @@
            <div class="max-w-4xl mx-auto">
         
             <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6">
-                Hệ thống Booking Du Lịch Thông Minh
+                Khám Phá Thế Giới Cùng Toura
             </h1>
         
             <p class="text-lg text-gray-100 mb-8 leading-relaxed">
-                Nền tảng giúp người dùng dễ dàng tìm kiếm, so sánh và đặt tour du lịch trực tuyến. Hệ thống tích hợp chức năng gợi ý tour thông minh nhằm cá nhân hóa trải nghiệm và hỗ trợ người dùng lựa chọn chuyến đi phù hợp nhất.
+                Tìm kiếm và đặt tour du lịch yêu thích của bạn
             </p>
         
             <a href="{{ route('tours.index') }}" class="inline-block px-8 py-4 bg-pink-500 text-white rounded-full font-bold text-lg shadow-lg hover:bg-pink-600 transition duration-300">
@@ -84,7 +84,6 @@
             <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
                 <div class="p-6 bg-white rounded-xl shadow border border-gray-100">
                     <h4 class="font-bold text-lg mb-3 text-blue-600">Frontend</h4>
-                    <p class="text-gray-600 text-sm font-medium">ReactJS</p>
                     <p class="text-gray-600 text-sm font-medium">HTML / CSS / Bootstrap</p>
                 </div>
                 <div class="p-6 bg-white rounded-xl shadow border border-gray-100">

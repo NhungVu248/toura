@@ -1,4 +1,21 @@
 <x-app-layout>
+            <section class="py-24 px-6 text-center bg-cover bg-center bg-no-repeat bg-black/50 bg-blend-overlay" 
+                style="background-image: url('{{ asset('img/nen.png') }}');">
+           <div class="max-w-4xl mx-auto">
+        
+            <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6">
+                Khám Phá Thế Giới Cùng Toura
+            </h1>
+        
+            <p class="text-lg text-gray-100 mb-8 leading-relaxed">
+                Tìm kiếm và đặt tour du lịch yêu thích của bạn
+            </p>
+        
+            <a href="{{ route('tours.index') }}" class="inline-block px-8 py-4 bg-pink-500 text-white rounded-full font-bold text-lg shadow-lg hover:bg-pink-600 transition duration-300">
+                Khám phá tour
+            </a>
+            </div>
+        </section>
 
 <div class="container mx-auto px-4 py-8">
 
