@@ -280,6 +280,57 @@ class="text-pink-500 font-medium">
     </div>
 
 </section>
+{{-- PARTNER WITH US --}}
+<section class="py-16 bg-gray-100">
+
+<div class="max-w-6xl mx-auto px-6">
+
+<div class="bg-white rounded-2xl shadow-xl p-10 grid md:grid-cols-2 gap-10 items-center">
+
+{{-- TEXT --}}
+<div>
+
+<h2 class="text-3xl font-bold text-pink-600 mb-4">
+Hợp tác cùng Toura
+</h2>
+
+<p class="text-gray-600 mb-6 leading-relaxed">
+Bạn là công ty du lịch, khách sạn hoặc đối tác dịch vụ du lịch?
+Hãy hợp tác cùng <strong>Toura</strong> để mở rộng thị trường,
+tiếp cận hàng nghìn khách hàng và phát triển kinh doanh bền vững.
+</p>
+
+<ul class="text-gray-600 space-y-2 mb-6">
+
+<li>✔️ Quảng bá tour đến hàng nghìn khách hàng</li>
+<li>✔️ Tăng doanh thu và độ nhận diện thương hiệu</li>
+<li>✔️ Hệ thống quản lý booking chuyên nghiệp</li>
+
+</ul>
+
+<a href="{{ route('contact.create') }}"
+class="inline-block px-6 py-3 bg-pink-500 text-white font-semibold rounded-lg shadow hover:bg-pink-600 transition">
+
+Liên hệ hợp tác
+
+</a>
+
+</div>
+
+
+{{-- IMAGE --}}
+<div>
+
+<img src="{{ asset('img/partnerr.jpg') }}"
+class="rounded-xl shadow-lg w-full object-cover">
+
+</div>
+
+</div>
+
+</div>
+
+</section>
     <footer class="bg-[#0f172a] text-gray-300 py-10 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">

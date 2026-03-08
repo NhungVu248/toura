@@ -2,136 +2,133 @@
 
 <div class="max-w-6xl mx-auto px-6 py-10">
 
-    {{-- HEADER --}}
-    <div class="flex items-center justify-between mb-8">
+{{-- HEADER --}}
+<div class="mb-8">
 
-        <div>
-            <h1 class="text-3xl font-bold text-gray-800">
-                My Bookings
-            </h1>
+<h1 class="text-3xl font-bold text-pink-500">
+Lịch sử đặt tour
+</h1>
 
-            <p class="text-gray-500 text-sm">
-                Quản lý các tour bạn đã đặt
-            </p>
-        </div>
+<p class="text-gray-500 text-sm">
+Quản lý các tour đã đặt của bạn
+</p>
 
-    </div>
+</div>
 
 
-    {{-- BOOKING LIST --}}
-    <div class="space-y-6">
+{{-- BOOKING LIST --}}
+<div class="space-y-6">
 
-        @foreach($bookings as $booking)
+@foreach($bookings as $booking)
 
-        <div class="bg-white shadow-lg rounded-xl overflow-hidden">
+<div class="bg-white rounded-xl shadow p-6">
 
-            <div class="grid md:grid-cols-5 gap-6 p-6 items-center">
+<div class="flex gap-6">
 
-                {{-- TOUR --}}
-                <div class="md:col-span-2">
+{{-- IMAGE --}}
+<div class="w-60 h-36 rounded-lg overflow-hidden">
 
-                    <div class="font-semibold text-gray-800 text-lg">
-                        {{ $booking->tour->title }}
-                    </div>
+@if($booking->tour->thumbnail)
 
-                    <div class="text-sm text-gray-500 mt-1">
-                        Booking #{{ $booking->id }}
-                    </div>
+<img
+src="{{ asset('storage/'.$booking->tour->thumbnail) }}"
+class="w-full h-full object-cover">
 
-                </div>
+@endif
 
-
-                {{-- DATE --}}
-                <div class="text-center">
-
-                    <div class="text-sm text-gray-500">
-                        Ngày khởi hành
-                    </div>
-
-                    <div class="font-medium">
-                        {{ \Carbon\Carbon::parse($booking->departure_date)->format('d/m/Y') }}
-                    </div>
-
-                </div>
+</div>
 
 
-                {{-- PASSENGERS --}}
-                <div class="text-center">
+{{-- INFO --}}
+<div class="flex-1">
 
-                    <div class="text-sm text-gray-500">
-                        Hành khách
-                    </div>
+<div class="flex justify-between items-start">
 
-                    <div class="font-medium">
-                        {{ $booking->adult_quantity }} NL
-                        •
-                        {{ $booking->child_quantity }} TE
-                    </div>
+<div>
 
-                </div>
+<h2 class="text-lg font-semibold">
+{{ $booking->tour->title }}
+</h2>
 
+<div class="text-sm text-gray-500 mt-1">
+📍 {{ $booking->tour->destination }}
+</div>
 
-                {{-- PRICE --}}
-                <div class="text-center">
+</div>
 
-                    <div class="text-sm text-gray-500">
-                        Tổng tiền
-                    </div>
+<span class="px-3 py-1 text-sm rounded-full text-white
+{{ $booking->booking_status == 'confirmed' ? 'bg-green-500' :
+($booking->booking_status == 'cancelled' ? 'bg-red-500' : 'bg-yellow-500') }}">
 
-                    <div class="text-pink-600 font-bold text-lg">
-                        {{ number_format($booking->total_price,0,',','.') }} đ
-                    </div>
+{{ ucfirst($booking->booking_status) }}
 
-                </div>
+</span>
 
-            </div>
+</div>
 
 
-            {{-- FOOTER --}}
-            <div class="border-t bg-gray-50 px-6 py-4 flex justify-between items-center">
+{{-- META INFO --}}
+<div class="grid grid-cols-4 gap-6 text-sm mt-4">
 
-                <div class="flex gap-4">
+<div>
+<div class="text-gray-400">Mã booking</div>
+<div class="font-medium">
+BK{{ $booking->id }}
+</div>
+</div>
 
-                    {{-- BOOKING STATUS --}}
-                    <span class="px-3 py-1 rounded-full text-sm text-white
-                        {{ $booking->booking_status == 'confirmed' ? 'bg-green-500' :
-                           ($booking->booking_status == 'cancelled' ? 'bg-red-500' : 'bg-yellow-500') }}">
-                        {{ ucfirst($booking->booking_status) }}
-                    </span>
+<div>
+<div class="text-gray-400">Ngày khởi hành</div>
+<div class="font-medium">
+{{ \Carbon\Carbon::parse($booking->departure_date)->format('d/m/Y') }}
+</div>
+</div>
 
+<div>
+<div class="text-gray-400">Số khách</div>
+<div class="font-medium">
+{{ $booking->adult_quantity }} người
+</div>
+</div>
 
-                    {{-- PAYMENT STATUS --}}
-                    <span class="px-3 py-1 rounded-full text-sm text-white
-                        {{ $booking->payment_status == 'paid' ? 'bg-green-600' :
-                           ($booking->payment_status == 'cancelled' ? 'bg-red-600' : 'bg-gray-500') }}">
-                        Payment: {{ ucfirst($booking->payment_status) }}
-                    </span>
+<div>
+<div class="text-gray-400">Tổng tiền</div>
+<div class="font-bold text-pink-500">
+{{ number_format($booking->total_price) }} đ
+</div>
+</div>
 
-                </div>
-
-
-                {{-- ACTION --}}
-                <a href="{{ route('booking.show',$booking->id) }}"
-                   class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm">
-
-                    View Details
-
-                </a>
-
-            </div>
-
-        </div>
-
-        @endforeach
-
-    </div>
+</div>
 
 
-    {{-- PAGINATION --}}
-    <div class="mt-10">
-        {{ $bookings->links() }}
-    </div>
+{{-- ACTIONS --}}
+<div class="flex gap-3 mt-4">
 
+<a href="{{ route('booking.show',$booking->id) }}"
+class="px-4 py-2 border rounded text-sm hover:bg-gray-100">
+
+Xem chi tiết
+
+</a>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+@endforeach
+
+</div>
+
+
+{{-- PAGINATION --}}
+<div class="mt-10">
+{{ $bookings->links() }}
+</div>
 
 </div>
 

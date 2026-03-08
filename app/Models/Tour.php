@@ -184,4 +184,8 @@ class Tour extends Model
         $img = $this->primaryImage()->first() ?? $this->images()->first();
         return $img ? asset('storage/' . $img->path) : null;
     }
+    public function bookings()
+    {
+        return $this->hasMany(\App\Models\Booking::class);
+    }
 }

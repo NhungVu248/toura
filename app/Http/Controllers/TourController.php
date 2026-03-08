@@ -5,29 +5,131 @@ namespace App\Http\Controllers;
 use App\Models\Tour;
 use Illuminate\Http\Request;
 use App\Models\TourImage;
+use App\Models\Blog;
+use App\Models\Booking;
 
 class TourController extends Controller
 {
     // public listing (show only active tours)
     public function index(Request $request)
-    {
-        $query = Tour::where('status', 'active');
+{
+    $query = Tour::where('status', 'active');
 
-        if ($request->filled('q')) {
-            $query->where('title', 'like', '%' . $request->q . '%');
-        }
+    /*
+    |--------------------------------
+    | Keyword search
+    |--------------------------------
+    */
 
-        if ($request->filled('destination')) {
-            $query->where('destination', $request->destination);
-        }
-
-        $tours = $query->orderBy('is_featured', 'desc')
-                       ->orderBy('created_at', 'desc')
-                       ->paginate(12);
-
-        return view('tours.index', compact('tours'));
+    if ($request->filled('q')) {
+        $query->where('title', 'like', '%' . $request->q . '%');
     }
 
+    /*
+    |--------------------------------
+    | Destination filter
+    |--------------------------------
+    */
+
+    if ($request->filled('destination')) {
+        $query->where('destination', $request->destination);
+    }
+
+    /*
+    |--------------------------------
+    | Domain filter
+    |--------------------------------
+    */
+
+    if ($request->filled('domain')) {
+        $query->where('domain', $request->domain);
+    }
+
+    /*
+    |--------------------------------
+    | Price filter
+    |--------------------------------
+    */
+
+    if ($request->filled('min_price')) {
+        $query->where('price_adult', '>=', $request->min_price);
+    }
+
+    if ($request->filled('max_price')) {
+        $query->where('price_adult', '<=', $request->max_price);
+    }
+
+    /*
+    |--------------------------------
+    | Sorting
+    |--------------------------------
+    */
+
+    switch ($request->get('sort')) {
+
+        case 'price_asc':
+            $query->orderBy('price_adult', 'asc');
+            break;
+
+        case 'price_desc':
+            $query->orderBy('price_adult', 'desc');
+            break;
+
+        case 'featured':
+            $query->orderBy('is_featured', 'desc');
+            break;
+
+        default:
+            $query->orderBy('is_featured', 'desc')
+                  ->orderBy('created_at', 'desc');
+    }
+
+    /*
+    |--------------------------------
+    | Pagination
+    |--------------------------------
+    */
+
+    $tours = $query->paginate(12)
+                   ->appends($request->query());
+
+    /*
+    |--------------------------------
+    | Data for filters
+    |--------------------------------
+    */
+
+    $destinations = Tour::select('destination')
+        ->distinct()
+        ->pluck('destination');
+
+    $domains = Tour::select('domain')
+        ->distinct()
+        ->pluck('domain');
+    // BLOG DU LỊCH
+        $blogs = Blog::latest()
+                ->take(3)
+                ->get();
+
+    /*
+|--------------------------------
+| Top booked tours
+|--------------------------------
+*/
+
+$topTours = Tour::withCount('bookings')
+            ->where('status','active')
+            ->orderBy('bookings_count','desc')
+            ->take(4)
+            ->get();
+    return view('tours.index', compact(
+        'tours',
+        'destinations',
+        'domains',
+        'blogs',
+        'topTours'
+    ));
+}
     // show detail (route model binding by slug)
             public function show(Tour $tour)
         {
