@@ -117,7 +117,50 @@
         @endauth
     </div>
 </div>
+{{-- NEWSLETTER SECTION --}}
+<section class="bg-gradient-to-r from-pink-50 to-yellow-50 py-16">
 
+    <div class="max-w-5xl mx-auto text-center px-6">
+
+        <h2 class="text-3xl font-bold text-pink-600 mb-4">
+            Nhận khuyến mãi tour
+        </h2>
+
+        <p class="text-gray-600 mb-8">
+            Đăng ký email để nhận ưu đãi, mã giảm giá và thông tin tour mới nhất từ Toura
+        </p>
+
+        @if(session('success'))
+            <div class="text-green-600 mb-4">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <form action="{{ route('newsletter.subscribe') }}"
+              method="POST"
+              class="flex flex-col md:flex-row justify-center gap-3 max-w-xl mx-auto">
+
+            @csrf
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Nhập email của bạn"
+                required
+                class="flex-1 px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-pink-300"
+            >
+
+            <button
+                type="submit"
+                class="px-6 py-3 bg-pink-500 text-white rounded-lg font-semibold hover:bg-pink-600 transition">
+                Đăng ký
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
     <footer class="bg-[#0f172a] text-gray-300 py-10 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">

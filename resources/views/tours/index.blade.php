@@ -84,6 +84,5 @@
     <div class="mt-10">
         {{ $tours->links() }}
     </div>
-
 </div>
 </x-app-layout>

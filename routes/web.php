@@ -21,6 +21,8 @@ use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\ContactController as AdminContactController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DestinationController;
+use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController;
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -69,6 +71,9 @@ Route::post('/contact',[ContactController::class,'store'])->name('contact.store'
 
 Route::get('/contact/thanks',[ContactController::class,'thanks'])->name('contact.thanks');
 Route::get('/destination', [DestinationController::class, 'index'])->name('destination.index');
+Route::post('/newsletter/subscribe',[NewsletterController::class,'subscribe'])
+->name('newsletter.subscribe');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -157,5 +162,12 @@ Route::prefix('admin')->group(function () {
         Route::delete('/contacts/{id}',[AdminContactController::class,'destroy'])
             ->name('admin.contacts.destroy');
             });
+         Route::get('/newsletter',
+                [AdminNewsletterController::class,'index']
+            )->name('admin.newsletter.index');
+
+    Route::delete('/newsletter/{id}',
+        [AdminNewsletterController::class,'destroy']
+    )->name('admin.newsletter.delete');
 });
 require __DIR__.'/auth.php';

@@ -91,6 +91,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('admin.newsletter.index') }}"
+                       class="nav-link">
+                        <i class="fa fa-envelope me-2"></i> Đăng ký nhận tin
+                    </a>
+                </li>
+                <li class="nav-item">
                      <a class="nav-link" href="{{ route('admin.profile') }}">
                         <i class="fas fa-user fa-fw me-2"></i> 
                      <span>Hồ sơ cá nhân</span>
