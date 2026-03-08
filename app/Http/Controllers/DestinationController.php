@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Tour;
 use App\Models\Review;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class DestinationController extends Controller
 {
@@ -39,7 +41,7 @@ class DestinationController extends Controller
         if ($request->filled('domain')) {
             $query->where('domain', $request->domain);
         }
-
+        
         /*
         |--------------------------------------------------------------------------
         | Filter theo giá
@@ -96,7 +98,38 @@ class DestinationController extends Controller
         $domains = Tour::select('domain')
             ->distinct()
             ->pluck('domain');
+        /*
+|--------------------------------------------------------------------------
+| Điểm đến phổ biến
+|--------------------------------------------------------------------------
+*/
 
+        $topDest = Tour::where('status','active')
+            ->select('destination', DB::raw('COUNT(*) as cnt'))
+            ->groupBy('destination')
+            ->orderByDesc('cnt')
+            ->limit(4)
+            ->get();
+
+        $popularDestinations = collect();
+
+        foreach ($topDest as $d) {
+
+            $rep = Tour::where('status','active')
+                ->where('destination', $d->destination)
+                ->orderByDesc('is_featured')
+                ->orderByDesc('rating_avg')
+                ->first();
+
+            $popularDestinations->push([
+                'destination' => $d->destination,
+                'thumbnail'   => $rep ? $rep->thumbnail : null,
+                'url'         => route('destination.index', [
+                    'destination' => $d->destination
+                ]),
+                'slug'        => Str::slug($d->destination),
+            ]);
+        }
         /*
         |--------------------------------------------------------------------------
         | Reviews (Social Proof Section)
@@ -119,6 +152,7 @@ class DestinationController extends Controller
         return view('destination.index', compact(
             'tours',
             'destinations',
+            'popularDestinations',
             'domains',
             'reviews',
             'ratingAvg',

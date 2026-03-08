@@ -23,7 +23,12 @@
                     Trang Chủ
                 </a>
 
-                <a href="{{ route('about') }}" class="hover:text-black transition">Giới Thiệu</a>
+                <a href="{{ route('about') }}" class="px-4 py-2 rounded-full font-semibold
+                    {{ request()->routeIs('tours.*') 
+                            ? 'bg-white text-pink-600' 
+                            : 'hover:text-black transition text-white' }}">
+                    Giới Thiệu
+                </a>
                 <a href="{{ route('tours.index') }}"
                     class="px-4 py-2 rounded-full font-semibold
                     {{ request()->routeIs('tours.*') 
@@ -31,8 +36,18 @@
                             : 'hover:text-black transition text-white' }}">
                         Tours
                     </a>
-                <a href="{{ route('destination.index') }}" class="hover:text-black transition">Điểm Đến</a>
-                <a href="{{ route('contact.create') }}" class="hover:text-black transition">Liên Hệ</a>
+                <a href="{{ route('destination.index') }}" class="px-4 py-2 rounded-full font-semibold
+                    {{ request()->routeIs('destination.*') 
+                            ? 'bg-white text-pink-600' 
+                            : 'hover:text-black transition text-white' }}">
+                    Điểm Đến
+                </a>
+                <a href="{{ route('contact.create') }}" class="px-4 py-2 rounded-full font-semibold
+                    {{ request()->routeIs('contact.*') 
+                            ? 'bg-white text-pink-600' 
+                            : 'hover:text-black transition text-white' }}">
+                    Liên Hệ
+                </a>
             </div>
 
             <!-- Right Section -->
@@ -116,9 +131,9 @@
 
         <a href="/" class="block">Trang Chủ</a>
         <a href="{{ route('about') }}" class="hover:text-black transition">Giới Thiệu</a>
-        <a href="{{ route('tours.index') }}" class="block">Tours</a>
-        <a href="{{ route('destination.index') }}" class="block">Điểm đến</a>
-        <a href="{{ route('contact.create') }}" class="block">Liên Hệ</a>
+        <a href="{{ route('tours.index') }}" class="hover:text-black transition">Tours</a>
+        <a href="{{ route('destination.index') }}" class="hover:text-black transition">Điểm đến</a>
+        <a href="{{ route('contact.create') }}" class="hover:text-black transition">Liên Hệ</a>
 
         @auth
             <div class="border-t border-pink-300 pt-3">

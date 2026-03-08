@@ -18,10 +18,55 @@
         </section>
 
 <div class="container mx-auto px-4 py-8">
+        {{-- FEATURED DESTINATIONS --}}
+        <section class="mb-10">
 
-    {{-- TITLE --}}
+            <h3 class="text-xl font-semibold text-center text-pink-500 mb-6">
+                Điểm đến phổ biến
+            </h3>
+
+            <div class="max-w-6xl mx-auto">
+
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+
+                    @foreach($popularDestinations as $pd)
+
+                        @php
+                            $img = $pd['thumbnail']
+                                ? asset('storage/'.$pd['thumbnail'])
+                                : asset('img/placeholder-destination.jpg');
+                        @endphp
+
+                        <a href="{{ $pd['url'] }}"
+                        class="group block rounded-xl overflow-hidden shadow hover:shadow-lg transition">
+
+                            <div class="relative h-36 sm:h-44">
+
+                                <img
+                                    src="{{ $img }}"
+                                    class="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                                >
+
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+
+                                <div class="absolute bottom-3 left-3 text-white font-semibold text-lg">
+                                    {{ $pd['destination'] }}
+                                </div>
+
+                            </div>
+
+                        </a>
+
+                    @endforeach
+
+                </div>
+
+            </div>
+
+        </section>
+        {{-- TITLE --}}
     <div class="mb-6">
-        <h2 class="text-2xl font-semibold">Điểm đến nổi bật</h2>
+        <h2 class="text-2xl font-semibold">Bộ lọc tìm kiếm</h2>
 
         <p class="text-sm text-gray-500">
             Kết quả cho:
@@ -30,7 +75,6 @@
             </strong>
         </p>
     </div>
-
 
     {{-- FILTER BAR --}}
     <div class="bg-white border rounded-xl shadow-sm p-6 mb-6">
