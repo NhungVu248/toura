@@ -23,6 +23,8 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\DestinationController;
 use App\Http\Controllers\NewsletterController;
 use App\Http\Controllers\Admin\NewsletterController as AdminNewsletterController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\BlogController;
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -38,18 +40,17 @@ Route::post('/email/verification-notification', function (Request $request) {
     $request->user()->sendEmailVerificationNotification();
     return back()->with('status', 'verification-link-sent');
 })->middleware(['auth', 'throttle:6,1'])->name('verification.send');
-Route::get('/', function () {
-    return view('dashboard');
-});
+
+Route::get('/', [DashboardController::class,'index'])
+    ->name('dashboard');
 
 Route::get('/auth/google', [SocialAuthController::class, 'redirect'])
     ->name('google.redirect');
 Route::get('/auth/google/callback', [SocialAuthController::class, 'callback'])
     ->name('google.callback');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->name('dashboard');
+Route::get('/dashboard', [DashboardController::class,'index'])
+    ->name('dashboard');
 Route::get('/gioi-thieu', function () {
     return view('about'); // Trỏ tới file resources/views/about.blade.php
 })->name('about');
@@ -73,6 +74,11 @@ Route::get('/contact/thanks',[ContactController::class,'thanks'])->name('contact
 Route::get('/destination', [DestinationController::class, 'index'])->name('destination.index');
 Route::post('/newsletter/subscribe',[NewsletterController::class,'subscribe'])
 ->name('newsletter.subscribe');
+Route::get('/blogs',[BlogController::class,'index'])
+    ->name('blogs.index');
+
+Route::get('/blogs/{slug}',[BlogController::class,'show'])
+    ->name('blogs.show');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -169,5 +175,7 @@ Route::prefix('admin')->group(function () {
     Route::delete('/newsletter/{id}',
         [AdminNewsletterController::class,'destroy']
     )->name('admin.newsletter.delete');
+    Route::resource('blogs', \App\Http\Controllers\Admin\BlogController::class)
+        ->names('admin.blogs');
 });
 require __DIR__.'/auth.php';

@@ -103,7 +103,7 @@
         <p class="text-gray-100 mb-8 text-lg drop-shadow-md">
             Khám phá tour phù hợp với bạn.
         </p>
-
+    
         @auth
             <a href="#"
                class="px-8 py-4 bg-pink-500 text-white font-bold rounded-lg shadow-lg hover:bg-pink-600 transition">
@@ -117,6 +117,125 @@
         @endauth
     </div>
 </div>
+{{-- POPULAR DESTINATIONS --}}
+<section class="py-16 bg-white">
+
+<div class="max-w-7xl mx-auto px-6">
+
+<h2 class="text-3xl font-bold text-center mb-10 text-pink-600">
+Điểm đến phổ biến
+</h2>
+
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+
+@foreach($popularDestinations as $destination)
+
+<a href="{{ route('destination.index',['destination'=>$destination->destination]) }}"
+class="relative rounded-xl overflow-hidden group shadow-lg">
+
+<img src="{{ asset('storage/'.$destination->thumbnail) }}"
+class="h-44 w-full object-cover group-hover:scale-110 transition duration-300">
+
+<div class="absolute inset-0 bg-black/40"></div>
+
+<div class="absolute bottom-4 left-4 text-white font-bold text-lg">
+{{ $destination->destination }}
+</div>
+
+</a>
+
+@endforeach
+
+</div>
+
+</div>
+</section>
+{{-- FEATURED TOURS --}}
+<section class="py-16 bg-gray-50">
+
+<div class="max-w-7xl mx-auto px-6">
+
+<h2 class="text-3xl font-bold text-center mb-10 text-pink-600">
+Tour nổi bật
+</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+@foreach($featuredTours as $tour)
+
+<a href="{{ route('tours.show',$tour->slug) }}"
+class="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-2xl transition group">
+
+<img src="{{ asset('storage/'.$tour->thumbnail) }}"
+class="h-48 w-full object-cover group-hover:scale-105 transition">
+
+<div class="p-5">
+
+<div class="text-sm text-gray-500 mb-1">
+📍 {{ $tour->destination }}
+</div>
+
+<h3 class="text-lg font-semibold mb-2 line-clamp-2">
+{{ $tour->title }}
+</h3>
+
+<p class="text-pink-600 font-bold text-xl">
+{{ number_format($tour->price_adult) }} đ
+</p>
+
+</div>
+
+</a>
+
+@endforeach
+
+</div>
+
+</div>
+</section>
+{{-- TRAVEL BLOG --}}
+<section class="py-16 bg-white">
+
+<div class="max-w-7xl mx-auto px-6">
+
+<h2 class="text-3xl font-bold text-center mb-10 text-pink-600">
+Cẩm nang du lịch
+</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+@foreach($blogs as $blog)
+
+<div class="bg-white rounded-xl shadow-lg overflow-hidden">
+
+<img src="{{ asset('storage/'.$blog->thumbnail) }}"
+class="h-44 w-full object-cover">
+
+<div class="p-5">
+
+<h3 class="font-semibold text-lg mb-2">
+{{ $blog->title }}
+</h3>
+
+<p class="text-sm text-gray-500 line-clamp-2 mb-3">
+{{ $blog->excerpt }}
+</p>
+
+<a href="{{ route('blogs.show',$blog->slug) }}"
+class="text-pink-500 font-medium">
+Đọc thêm →
+</a>
+
+</div>
+
+</div>
+
+@endforeach
+
+</div>
+
+</div>
+</section>
 {{-- NEWSLETTER SECTION --}}
 <section class="bg-gradient-to-r from-pink-50 to-yellow-50 py-16">
 

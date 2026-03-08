@@ -97,6 +97,12 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a href="{{ route('admin.blogs.index') }}"
+                       class="nav-link">
+                        <i class="fa fa-blog me-2"></i> Quản lý Blog
+                    </a>
+                </li>
+                <li class="nav-item">
                      <a class="nav-link" href="{{ route('admin.profile') }}">
                         <i class="fas fa-user fa-fw me-2"></i> 
                      <span>Hồ sơ cá nhân</span>
