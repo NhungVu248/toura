@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use App\Models\TourImage;
 use App\Models\Blog;
 use App\Models\Booking;
-use Illuminate\Support\Facades\Storage;
 
 class TourController extends Controller
 {
