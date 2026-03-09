@@ -9,8 +9,8 @@
 <img src="{{ asset('storage/'.$blog->thumbnail) }}"
 class="rounded-xl mb-8">
 
-<div class="prose max-w-none">
-{!! $blog->content !!}
+<div class="prose max-w-none whitespace-pre-line">
+    {!! $blog->content !!}
 </div>
 
 </div>

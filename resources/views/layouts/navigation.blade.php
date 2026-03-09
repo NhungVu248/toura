@@ -24,7 +24,7 @@
                 </a>
 
                 <a href="{{ route('about') }}" class="px-4 py-2 rounded-full font-semibold
-                    {{ request()->routeIs('tours.*') 
+                    {{ request()->routeIs('about*') 
                             ? 'bg-white text-pink-600' 
                             : 'hover:text-black transition text-white' }}">
                     Giới Thiệu

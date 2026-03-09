@@ -42,7 +42,7 @@
     @endif
 </div>
 
-        <div class="container mx-auto p-6 -mt-14">
+        <div class="container mx-auto p-6 -mt-14 relative z-10">
             <div class="bg-white rounded-xl shadow-lg overflow-hidden p-6">
                 {{-- TITLE ROW --}}
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -215,29 +215,14 @@
                     {{-- ITINERARY --}}
                     <div class="tab-panel hidden" id="itinerary">
                         <h3 class="text-xl font-semibold mb-4">Lịch trình chi tiết</h3>
-
-                        <div class="space-y-6">
-                            @foreach($itinerary as $day)
-                            <div class="flex gap-6">
-                                <div class="w-2 bg-pink-500 rounded-l"></div>
-                                <div class="flex-1">
-                                    <div class="inline-block bg-gradient-to-r from-pink-500 to-yellow-500 text-white px-3 py-1 rounded-full text-sm mb-2">
-                                        {{ $day['day'] ?? '' }}
-                                    </div>
-                                    <h4 class="text-lg font-semibold mb-2">
-                                        {{ $day['title'] ?? '' }}
-                                    </h4>
-
-                                    @if(!empty($day['activities']))
-                                        <ul class="list-disc list-inside text-gray-700 space-y-1">
-                                            @foreach($day['activities'] as $act)
-                                                <li>{{ $act }}</li>
-                                            @endforeach
-                                        </ul>
-                                    @endif
-                                </div>
-                            </div>
-                        @endforeach
+                        
+                        {{-- In trực tiếp nội dung văn bản bạn nhập trong Admin, nl2br giúp giữ lại các dấu Enter xuống dòng --}}
+                        <div class="text-gray-700 leading-relaxed space-y-4">
+                            @if(!empty($tour->itinerary))
+                                {!! nl2br(e($tour->itinerary)) !!}
+                            @else
+                                <p>Đang cập nhật lịch trình...</p>
+                            @endif
                         </div>
                     </div>
 
@@ -430,7 +415,7 @@
         </div>
 
         {{-- STICKY BOOKING BAR --}}
-        <div class="fixed bottom-4 left-0 right-0 flex justify-center pointer-events-none">
+        <div class="fixed bottom-4 left-0 right-0 flex justify-center pointer-events-none z-50">
             <div class="max-w-6xl w-full px-6 pointer-events-auto">
                 <div class="bg-white rounded-2xl shadow-lg flex items-center justify-between p-4">
                     <div class="flex gap-6 items-center">
