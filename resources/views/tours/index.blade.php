@@ -209,7 +209,7 @@ Xóa bộ lọc
 
                 {{-- Duration --}}
                 <div class="text-sm text-gray-600 mb-3">
-                    ⏳ {{ $tour->duration }} ngày
+                    ⏳ {{ $tour->duration }}
                 </div>
 
                 {{-- Price --}}
