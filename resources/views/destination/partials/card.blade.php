@@ -17,7 +17,7 @@
         {{-- Content --}}
         <div class="p-4">
             <h3 class="text-lg font-semibold leading-tight text-gray-800 mb-1">{{ $tour->title }}</h3>
-            <div class="text-sm text-gray-500 mb-2">{{ $tour->destination }} • {{ $tour->duration }} ngày</div>
+            <div class="text-sm text-gray-500 mb-2">{{ $tour->destination }} • {{ $tour->duration }}</div>
 
             {{-- Price --}}
             <div class="flex items-center justify-between mt-4">
