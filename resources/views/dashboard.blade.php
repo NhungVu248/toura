@@ -195,46 +195,31 @@ class="h-48 w-full object-cover group-hover:scale-105 transition">
 </section>
 {{-- TRAVEL BLOG --}}
 <section class="py-16 bg-white">
+  <div class="max-w-7xl mx-auto px-6">
+    <h2 class="text-3xl font-bold text-center mb-6 text-pink-600">Cẩm nang du lịch</h2>
 
-<div class="max-w-7xl mx-auto px-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      @forelse(($blogs ?? collect())->take(3) as $blog)
+        <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+          <img src="{{ asset('storage/'.$blog->thumbnail) }}" class="h-44 w-full object-cover" alt="{{ $blog->title }}">
+          <div class="p-5">
+            <h3 class="font-semibold text-lg mb-2">{{ $blog->title }}</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 mb-3">{{ $blog->excerpt }}</p>
+            <a href="{{ route('blogs.show', $blog->slug) }}" class="text-pink-500 font-medium">Đọc thêm →</a>
+          </div>
+        </div>
+      @empty
+        <div class="col-span-3 text-center text-gray-500">Chưa có bài viết nào.</div>
+      @endforelse
+    </div>
 
-<h2 class="text-3xl font-bold text-center mb-10 text-pink-600">
-Cẩm nang du lịch
-</h2>
-
-<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-
-@foreach($blogs as $blog)
-
-<div class="bg-white rounded-xl shadow-lg overflow-hidden">
-
-<img src="{{ asset('storage/'.$blog->thumbnail) }}"
-class="h-44 w-full object-cover">
-
-<div class="p-5">
-
-<h3 class="font-semibold text-lg mb-2">
-{{ $blog->title }}
-</h3>
-
-<p class="text-sm text-gray-500 line-clamp-2 mb-3">
-{{ $blog->excerpt }}
-</p>
-
-<a href="{{ route('blogs.show',$blog->slug) }}"
-class="text-pink-500 font-medium">
-Đọc thêm →
-</a>
-
-</div>
-
-</div>
-
-@endforeach
-
-</div>
-
-</div>
+    {{-- XEM THÊM --}}
+    <div class="text-center mt-8">
+      <a href="{{ route('blogs.index') }}" class="inline-block px-6 py-3 bg-pink-500 text-white rounded-lg font-semibold hover:bg-pink-600">
+        Xem thêm bài viết
+      </a>
+    </div>
+  </div>
 </section>
 {{-- NEWSLETTER SECTION --}}
 <section class="bg-gradient-to-r from-pink-50 to-yellow-50 py-16">
