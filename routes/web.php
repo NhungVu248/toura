@@ -143,10 +143,9 @@ Route::prefix('admin')->group(function () {
             'tour' => 'id'
         ])
         ->names('admin.tours');
-        Route::delete('/admin/tours/images/{id}', 
-        [TourController::class, 'deleteImage'])
-        ->name('admin.tours.images.delete');
-
+        Route::delete('/tours/images/{id}', 
+    [AdminTourController::class, 'deleteImage'])
+    ->name('admin.tours.images.delete');
         Route::get('/bookings', [AdminBookingController::class, 'index'])->name('admin.bookings.index');
         Route::get('/bookings/{booking}', [AdminBookingController::class, 'show'])->name('admin.bookings.show');
         Route::post('/bookings/{booking}/confirm', [AdminBookingController::class, 'confirm'])->name('admin.bookings.confirm');

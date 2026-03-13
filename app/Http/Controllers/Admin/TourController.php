@@ -378,49 +378,27 @@ class TourController extends Controller
         $tour->delete();
         return redirect()->route('admin.tours.index')->with('success', 'Tour đã bị xóa.');
     }
-    public function deleteImage($tourId, $imageId)
-    {
-        $tour = Tour::findOrFail($tourId);
+    public function deleteImage($id)
+{
+    $image = TourImage::findOrFail($id);
+    $tour = $image->tour;
 
-        $image = $tour->images()->where('id', $imageId)->first();
+    if ($image->is_primary) {
+        $newPrimary = $tour->images()
+            ->where('id','!=',$image->id)
+            ->first();
 
-        if (!$image) {
-            return back()->with('error', 'Ảnh không tồn tại hoặc không thuộc tour này.');
-        }
-
-        DB::beginTransaction();
-
-        try {
-
-            // Nếu là ảnh primary -> gán ảnh khác làm primary
-            if ($image->is_primary) {
-
-                $newPrimary = $tour->images()
-                    ->where('id', '!=', $image->id)
-                    ->first();
-
-                if ($newPrimary) {
-                    $newPrimary->update(['is_primary' => true]);
-                }
-            }
-
-            // Xóa file vật lý
-            if ($image->path && Storage::disk('public')->exists($image->path)) {
-                Storage::disk('public')->delete($image->path);
-            }
-
-            // Xóa record DB
-            $image->delete();
-
-            DB::commit();
-
-            return back()->with('success', 'Đã xóa ảnh thành công.');
-
-        } catch (\Exception $e) {
-
-            DB::rollBack();
-
-            return back()->with('error', 'Có lỗi khi xóa ảnh.');
+        if($newPrimary){
+            $newPrimary->update(['is_primary'=>true]);
         }
     }
+
+    if ($image->path && Storage::disk('public')->exists($image->path)) {
+        Storage::disk('public')->delete($image->path);
+    }
+
+    $image->delete();
+
+    return back()->with('success','Đã xóa ảnh');
+}
 }
